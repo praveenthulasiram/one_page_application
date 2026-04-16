@@ -65,6 +65,7 @@
 
       .question-text {
         max-width: 90%;
+        margin-inline: auto;
         font-size: clamp(1.15rem, 2.4vmin, 2rem);
         transition: opacity 240ms ease, transform 240ms ease;
       }
@@ -75,6 +76,8 @@
 
       .host-line {
         color: #495057;
+        margin-inline: auto;
+        text-align: center;
         font-size: clamp(0.78rem, 1vmax, 0.95rem);
       }
 
@@ -100,25 +103,10 @@
         box-shadow: 0 8px 18px rgba(13, 110, 253, 0.12);
       }
 
-      .answer-btn.is-picked {
-        border-color: #6f42c1;
-        box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.2);
-      }
-
       .answer-btn.is-correct {
         background-color: #198754;
         border-color: #198754;
         color: #fff;
-      }
-
-      .answer-btn.is-wrong {
-        background-color: #dc3545;
-        border-color: #dc3545;
-        color: #fff;
-      }
-
-      .score-chip {
-        min-width: 5.1rem;
       }
 
       .timer-wrap {
@@ -233,16 +221,12 @@
         <div class="question-section d-flex flex-column justify-content-center text-center p-3 p-md-4 gap-2">
           <div class="d-flex justify-content-between align-items-center">
             <span id="questionPill" class="badge text-bg-dark rounded-pill meta-pill">Question 1 / 5</span>
-            <span id="demoModePill" class="badge text-bg-primary rounded-pill meta-pill">Demo Mode</span>
+            <span class="meta-pill" aria-hidden="true"></span>
           </div>
           <h1 id="questionText" class="question-text fw-semibold mb-0">
             Which option best describes Bootstrap's primary purpose in web development?
           </h1>
           <div id="hostLine" class="host-line fw-medium">Get ready! Watch answers reveal automatically.</div>
-          <div class="d-flex justify-content-center gap-2">
-            <span id="scoreChip" class="badge text-bg-success rounded-pill score-chip">Score: 0</span>
-            <span id="streakChip" class="badge text-bg-secondary rounded-pill score-chip">Streak: 0</span>
-          </div>
         </div>
 
         <div class="answers-section">
@@ -305,8 +289,6 @@
       const revealAtSeconds = 4;
       let remaining = totalSeconds;
       let questionIndex = 0;
-      let score = 0;
-      let streak = 0;
       let revealDone = false;
       const timerBar = document.getElementById("timerBar");
       const timerText = document.getElementById("timerText");
@@ -316,13 +298,11 @@
       const questionText = document.getElementById("questionText");
       const questionPill = document.getElementById("questionPill");
       const hostLine = document.getElementById("hostLine");
-      const scoreChip = document.getElementById("scoreChip");
-      const streakChip = document.getElementById("streakChip");
       const answerButtons = [0, 1, 2, 3].map((index) => document.getElementById(`answer${index}`));
 
       const clearAnswerState = () => {
         answerButtons.forEach((button) => {
-          button.classList.remove("is-picked", "is-correct", "is-wrong");
+          button.classList.remove("is-correct");
           button.disabled = false;
         });
       };
@@ -339,37 +319,22 @@
         });
       };
 
-      const updateScoreUI = () => {
-        scoreChip.textContent = `Score: ${score}`;
-        streakChip.textContent = `Streak: ${streak}`;
-      };
-
       const revealAnswer = () => {
         if (revealDone) {
           return;
         }
 
         const current = questionBank[questionIndex];
-        const pickedIndex = Math.floor(Math.random() * answerButtons.length);
         revealDone = true;
 
         answerButtons.forEach((button, index) => {
           button.disabled = true;
-          if (index === pickedIndex) {
-            button.classList.add("is-picked");
-          }
           if (index === current.correctIndex) {
             button.classList.add("is-correct");
-          } else if (index === pickedIndex) {
-            button.classList.add("is-wrong");
           }
         });
 
-        const isCorrect = pickedIndex === current.correctIndex;
-        score += isCorrect ? 10 : 0;
-        streak = isCorrect ? streak + 1 : 0;
-        updateScoreUI();
-        hostLine.textContent = isCorrect ? "Great pick! Correct answer revealed." : "Close one! Watch the correct answer highlight.";
+        hostLine.textContent = "Time up! Correct answer highlighted.";
       };
 
       const runTransition = () => {
@@ -418,7 +383,6 @@
       };
 
       timerBar.classList.add("bg-primary");
-      updateScoreUI();
       renderQuestion();
       tick();
       const timerInterval = setInterval(tick, 1000);
