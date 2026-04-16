@@ -55,6 +55,54 @@
         background: linear-gradient(180deg, #ffffff, #f8f9fa);
       }
 
+      .intro-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        padding: clamp(1.5rem, 5vmin, 3rem);
+        text-align: center;
+        background: linear-gradient(155deg, rgba(13, 110, 253, 0.09), rgba(111, 66, 193, 0.11));
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 260ms ease, transform 260ms ease, visibility 260ms ease;
+      }
+
+      .final-screen {
+        position: absolute;
+        inset: 0;
+        z-index: 35;
+        padding: clamp(1.5rem, 5vmin, 3rem);
+        text-align: center;
+        background: linear-gradient(155deg, rgba(25, 135, 84, 0.1), rgba(13, 110, 253, 0.1));
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        transition: opacity 260ms ease, transform 260ms ease, visibility 260ms ease;
+      }
+
+      .intro-title {
+        font-size: clamp(1.5rem, 4.5vmin, 2.8rem);
+      }
+
+      .intro-message {
+        max-width: min(700px, 92%);
+        margin-inline: auto;
+        color: #495057;
+        font-size: clamp(0.95rem, 1.5vmax, 1.2rem);
+      }
+
+      .final-title {
+        font-size: clamp(1.5rem, 4.5vmin, 2.8rem);
+      }
+
+      .final-message {
+        max-width: min(860px, 95%);
+        margin-inline: auto;
+        color: #495057;
+        font-size: clamp(0.95rem, 1.5vmax, 1.15rem);
+      }
+
       .answers-section {
         flex: 1;
         background: #f8f9fa;
@@ -149,6 +197,34 @@
         transform: translateY(8px);
       }
 
+      .quiz-shell.is-intro .question-section,
+      .quiz-shell.is-intro .answers-section,
+      .quiz-shell.is-intro .timer-wrap {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .quiz-shell.is-intro .intro-screen {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .quiz-shell.is-final .question-section,
+      .quiz-shell.is-final .answers-section,
+      .quiz-shell.is-final .timer-wrap {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+
+      .quiz-shell.is-final .final-screen {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
       @keyframes pulse {
         from {
           transform: translate(-50%, -50%) scale(1);
@@ -217,7 +293,17 @@
   </head>
   <body>
     <main class="app-root">
-      <section class="quiz-shell d-flex flex-column">
+      <section class="quiz-shell d-flex flex-column is-intro">
+        <div id="introScreen" class="intro-screen d-flex flex-column align-items-center justify-content-center gap-3">
+          <span class="badge text-bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2">Ready?</span>
+          <h1 id="introTitle" class="intro-title fw-bold mb-0">Web Development Quiz</h1>
+          <p id="introMessage" class="intro-message mb-0">Sharpen your basics before the first question appears.</p>
+        </div>
+        <div id="finalScreen" class="final-screen d-flex flex-column align-items-center justify-content-center gap-3" aria-hidden="true">
+          <span class="badge text-bg-success-subtle text-success-emphasis rounded-pill px-3 py-2">Quiz Complete</span>
+          <h1 id="finalTitle" class="final-title fw-bold mb-0">Thank you for watching.</h1>
+          <p id="finalMessage" class="final-message mb-0">If you enjoyed this content, please consider subscribing, liking, and supporting us for more similar content.</p>
+        </div>
         <div class="question-section d-flex flex-column justify-content-center text-center p-3 p-md-4 gap-2">
           <div class="d-flex justify-content-between align-items-center">
             <span id="questionPill" class="badge text-bg-dark rounded-pill meta-pill">Question 1 / 5</span>
@@ -241,12 +327,13 @@
         <div class="timer-wrap shadow-sm">
           <div class="d-flex justify-content-between align-items-center mb-1 px-1">
             <span class="timer-label">Time Remaining</span>
-            <span id="timerText" class="timer-label">30s</span>
+            <span id="timerText" class="timer-label">12s</span>
           </div>
-          <div class="progress" role="progressbar" aria-label="Question timer" aria-valuemin="0" aria-valuemax="30" aria-valuenow="30">
+          <div class="progress" role="progressbar" aria-label="Question timer" aria-valuemin="0" aria-valuemax="12" aria-valuenow="12">
             <div id="timerBar" class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
           </div>
         </div>
+
       </section>
     </main>
 
@@ -286,19 +373,129 @@
       ];
 
       const totalSeconds = 12;
-      const revealAtSeconds = 4;
+      const revealDurationMs = 2000;
+      const introDelayMs = 3000;
+      const introContent = {
+        title: "Web Development Quiz",
+        message: "Sharpen your basics before the first question appears."
+      };
+      const finalContent = {
+        title: "Thank you for watching.",
+        message: "If you enjoyed this content, please consider subscribing, liking, and supporting us for more similar content."
+      };
       let remaining = totalSeconds;
       let questionIndex = 0;
       let revealDone = false;
+      let quizCompleted = false;
+      let isRevealing = false;
+      let audioReady = false;
+      let quizStarted = false;
+      let timerInterval;
+      let revealTimeout;
+      let introTimeout;
       const timerBar = document.getElementById("timerBar");
       const timerText = document.getElementById("timerText");
       const progressEl = document.querySelector(".progress");
       const timerWrap = document.querySelector(".timer-wrap");
       const quizShell = document.querySelector(".quiz-shell");
+      const introScreen = document.getElementById("introScreen");
+      const introTitle = document.getElementById("introTitle");
+      const introMessage = document.getElementById("introMessage");
+      const finalScreen = document.getElementById("finalScreen");
+      const finalTitle = document.getElementById("finalTitle");
+      const finalMessage = document.getElementById("finalMessage");
       const questionText = document.getElementById("questionText");
       const questionPill = document.getElementById("questionPill");
       const hostLine = document.getElementById("hostLine");
       const answerButtons = [0, 1, 2, 3].map((index) => document.getElementById(`answer${index}`));
+      const sounds = {
+        ticking: new Audio("asset/sound/clock-tick.mp3"),
+        applause: new Audio("asset/sound/applause.mp3"),
+        cheers: new Audio("asset/sound/cheers.mp3")
+      };
+      sounds.ticking.loop = true;
+
+      Object.values(sounds).forEach((sound) => {
+        sound.preload = "auto";
+      });
+
+      const playSound = (sound, { restart = false } = {}) => {
+        if (!sound) {
+          return;
+        }
+
+        if (restart) {
+          sound.pause();
+          sound.currentTime = 0;
+        }
+
+        sound.play().catch(() => {});
+      };
+
+      const stopSound = (sound) => {
+        if (!sound) {
+          return;
+        }
+
+        sound.pause();
+        sound.currentTime = 0;
+      };
+
+      const stopAllSounds = () => {
+        Object.values(sounds).forEach((sound) => {
+          stopSound(sound);
+        });
+      };
+
+      const startTicking = () => {
+        stopSound(sounds.applause);
+        stopSound(sounds.cheers);
+        playSound(sounds.ticking, { restart: true });
+      };
+      const silentKick = new Audio();
+      silentKick.play().catch(() => {});
+      const unlockAudio = async () => {
+        if (audioReady) {
+          return;
+        }
+
+        const soundList = Object.values(sounds);
+        for (const sound of soundList) {
+          try {
+            sound.muted = true;
+            sound.currentTime = 0;
+            await sound.play();
+          } catch (_error) {
+          }
+
+          sound.pause();
+          sound.currentTime = 0;
+          sound.muted = false;
+        }
+
+        audioReady = true;
+
+        if (!quizCompleted && !isRevealing && remaining > 0) {
+          syncTickingWithState();
+        }
+      };
+
+      const attachAudioFallbackUnlock = () => {
+        const options = { once: true, passive: true };
+        window.addEventListener("pointerdown", unlockAudio, options);
+        window.addEventListener("touchstart", unlockAudio, options);
+        window.addEventListener("keydown", unlockAudio, { once: true });
+      };
+
+      const syncTickingWithState = () => {
+        if (quizCompleted || isRevealing || remaining <= 0) {
+          return;
+        }
+
+        if (sounds.ticking.paused) {
+          startTicking();
+        }
+      };
 
       const clearAnswerState = () => {
         answerButtons.forEach((button) => {
@@ -310,7 +507,7 @@
       const renderQuestion = () => {
         const current = questionBank[questionIndex];
         questionText.textContent = current.question;
-        hostLine.textContent = current.host;
+        hostLine.textContent = current.host || "Choose your answer before time runs out.";
         questionPill.textContent = `Question ${questionIndex + 1} / ${questionBank.length}`;
 
         answerButtons.forEach((button, index) => {
@@ -345,18 +542,72 @@
       };
 
       const nextQuestion = () => {
-        questionIndex = (questionIndex + 1) % questionBank.length;
+        questionIndex += 1;
         remaining = totalSeconds;
         revealDone = false;
+        isRevealing = false;
         timerBar.classList.remove("bg-danger");
         timerBar.classList.add("bg-primary", "progress-bar-animated");
         timerWrap.classList.remove("urgent");
         clearAnswerState();
         runTransition();
         renderQuestion();
+        setTimeout(() => {
+          syncTickingWithState();
+        }, 260);
+      };
+
+      const completeQuiz = () => {
+        if (quizCompleted) {
+          return;
+        }
+
+        quizCompleted = true;
+        isRevealing = false;
+        clearInterval(timerInterval);
+        clearTimeout(revealTimeout);
+        stopAllSounds();
+        timerBar.classList.remove("progress-bar-animated");
+        timerWrap.classList.remove("urgent");
+        questionPill.textContent = `Completed ${questionBank.length} / ${questionBank.length}`;
+        timerText.textContent = "Done";
+        hostLine.textContent = "All questions completed. Well done!";
+        playSound(sounds.cheers, { restart: true });
+        quizShell.classList.add("is-final");
+        if (finalScreen) {
+          finalScreen.setAttribute("aria-hidden", "false");
+        }
+      };
+
+      const beginRevealPhase = () => {
+        if (isRevealing || quizCompleted) {
+          return;
+        }
+
+        isRevealing = true;
+        stopSound(sounds.ticking);
+        timerBar.classList.remove("progress-bar-animated");
+        revealAnswer();
+        playSound(sounds.applause, { restart: true });
+
+        clearTimeout(revealTimeout);
+        revealTimeout = setTimeout(() => {
+          stopSound(sounds.applause);
+
+          if (questionIndex >= questionBank.length - 1) {
+            completeQuiz();
+            return;
+          }
+
+          nextQuestion();
+        }, revealDurationMs);
       };
 
       const tick = () => {
+        if (quizCompleted || isRevealing) {
+          return;
+        }
+
         const percent = Math.max(0, Math.round((remaining / totalSeconds) * 100));
         timerBar.style.width = `${percent}%`;
         timerBar.textContent = "";
@@ -364,28 +615,56 @@
         progressEl.setAttribute("aria-valuenow", String(remaining));
         progressEl.setAttribute("aria-valuemax", String(totalSeconds));
 
-        if (remaining <= revealAtSeconds) {
+        if (remaining <= 4) {
           timerBar.classList.add("bg-danger");
           timerWrap.classList.add("urgent");
         }
 
-        if (remaining === revealAtSeconds) {
-          revealAnswer();
-        }
-
         if (remaining <= 0) {
-          timerBar.classList.remove("progress-bar-animated");
-          setTimeout(nextQuestion, 420);
+          beginRevealPhase();
           return;
         }
 
         remaining -= 1;
       };
 
+      const hideIntroAndStartQuiz = () => {
+        if (quizStarted) {
+          return;
+        }
+
+        quizStarted = true;
+        clearTimeout(introTimeout);
+        quizShell.classList.remove("is-intro");
+        if (introScreen) {
+          introScreen.setAttribute("aria-hidden", "true");
+        }
+        renderQuestion();
+        unlockAudio().finally(() => {
+          startTicking();
+          tick();
+          timerInterval = setInterval(tick, 1000);
+        });
+      };
+
       timerBar.classList.add("bg-primary");
-      renderQuestion();
-      tick();
-      const timerInterval = setInterval(tick, 1000);
+      attachAudioFallbackUnlock();
+      introTitle.textContent = introContent.title;
+      introMessage.textContent = introContent.message;
+      finalTitle.textContent = finalContent.title;
+      finalMessage.textContent = finalContent.message;
+
+      introTimeout = setTimeout(() => {
+        hideIntroAndStartQuiz();
+      }, introDelayMs);
+
+      if (introScreen) {
+        introScreen.addEventListener("click", () => {
+          unlockAudio().then(() => {
+            hideIntroAndStartQuiz();
+          });
+        }, { once: true });
+      }
     </script>
   </body>
 </html>
