@@ -1,0 +1,68 @@
+{
+  "questions": [
+    {
+      "question": "Python question 1?",
+      "answers": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "correctIndex": 0,
+      "host": "Pick the best answer!"
+    },
+    {
+      "question": "Python question 2?",
+      "answers": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "correctIndex": 0,
+      "host": "Pick the best answer!"
+    },
+    {
+      "question": "Python question 3?",
+      "answers": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "correctIndex": 0,
+      "host": "Pick the best answer!"
+    },
+    {
+      "question": "Python question 4?",
+      "answers": [
+        "Option A",
+        "Option B",
+        "Option C",
+        "Option D"
+      ],
+      "correctIndex": 0,
+      "host": "Pick the best answer!"
+    }
+  ],
+  "timing": {
+    "questionSeconds": 7,
+    "revealDurationMs": 2000,
+    "introDelayMs": 3000,
+    "urgentThresholdSeconds": 4,
+    "tickIntervalMs": 1000
+  },
+  "content": {
+    "intro": {
+      "title": "Python Quiz",
+      "message": "Get ready for fun, fast, easy-to-guess questions."
+    },
+    "final": {
+      "title": "Quiz complete!",
+      "message": "Great job! Thanks for watching and playing along."
+    }
+  },
+  "theme": {
+    "name": "primary-play"
+  }
+}

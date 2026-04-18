@@ -11,12 +11,53 @@
     <style>
       :root {
         --border-size: 10px;
+        --page-bg: #f2f7ff;
+        --shell-border: #15325f;
+        --shell-bg-1: #ffffff;
+        --shell-bg-2: #eef7ff;
+        --decor-1: rgba(17, 138, 245, 0.14);
+        --decor-2: rgba(255, 56, 96, 0.13);
+        --question-bg-1: #ffffff;
+        --question-bg-2: #f2f8ff;
+        --answers-bg: #eff6ff;
+        --intro-bg-1: rgba(17, 138, 245, 0.15);
+        --intro-bg-2: rgba(255, 214, 31, 0.18);
+        --final-bg-1: rgba(43, 214, 110, 0.13);
+        --final-bg-2: rgba(17, 138, 245, 0.14);
+        --text-main: #12213f;
+        --text-subtle: #2f4f82;
+        --question-emphasis: #ffd41f;
+        --question-emphasis-text: #12213f;
+        --pill-bg: #1f4ea8;
+        --pill-text: #ffffff;
+        --intro-badge-bg: #ffe36b;
+        --intro-badge-text: #112a54;
+        --final-badge-bg: #8ff0b9;
+        --final-badge-text: #0d4a2a;
+        --answer-bg-1: #ffffff;
+        --answer-bg-2: #d9edff;
+        --answer-border: #2274f4;
+        --answer-text: #11315e;
+        --answer-hover-shadow: rgba(34, 116, 244, 0.27);
+        --timer-wrap-bg: rgba(255, 255, 255, 0.96);
+        --timer-wrap-border: #c6dbff;
+        --timer-label: #163465;
+        --progress-bg: #dbe8fb;
+        --timer-bar-start: #1f83ff;
+        --timer-bar-end: #165df0;
+        --timer-urgent-start: #ff5f4d;
+        --timer-urgent-end: #f11d3c;
+        --urgent-shadow-1: rgba(241, 29, 60, 0.2);
+        --urgent-shadow-2: rgba(241, 29, 60, 0.28);
+        --feedback-correct: #22b65f;
+        --feedback-correct-text: #ffffff;
+        --feedback-incorrect: #f11d3c;
       }
 
       body {
         margin: 0;
         min-height: 100vh;
-        background: #f5f7fb;
+        background: var(--page-bg);
       }
 
       .app-root {
@@ -29,9 +70,9 @@
         position: relative;
         height: 100%;
         width: 100%;
-        border: var(--border-size) solid #212529;
+        border: var(--border-size) solid var(--shell-border);
         border-radius: 1rem;
-        background: linear-gradient(160deg, #ffffff 30%, #f5f9ff 100%);
+        background: linear-gradient(160deg, var(--shell-bg-1) 30%, var(--shell-bg-2) 100%);
         overflow: hidden;
       }
 
@@ -39,8 +80,8 @@
         content: "";
         position: absolute;
         inset: -20%;
-        background: radial-gradient(circle at 20% 20%, rgba(13, 110, 253, 0.08), transparent 45%),
-          radial-gradient(circle at 80% 75%, rgba(111, 66, 193, 0.08), transparent 45%);
+        background: radial-gradient(circle at 20% 20%, var(--decor-1), transparent 45%),
+          radial-gradient(circle at 80% 75%, var(--decor-2), transparent 45%);
         animation: drift 14s linear infinite alternate;
         pointer-events: none;
       }
@@ -52,7 +93,7 @@
 
       .question-section {
         flex: 0 0 var(--question-basis);
-        background: linear-gradient(180deg, #ffffff, #f8f9fa);
+        background: linear-gradient(180deg, var(--question-bg-1), var(--question-bg-2));
       }
 
       .intro-screen {
@@ -61,7 +102,7 @@
         z-index: 30;
         padding: clamp(1.5rem, 5vmin, 3rem);
         text-align: center;
-        background: linear-gradient(155deg, rgba(13, 110, 253, 0.09), rgba(111, 66, 193, 0.11));
+        background: linear-gradient(155deg, var(--intro-bg-1), var(--intro-bg-2));
         opacity: 0;
         visibility: hidden;
         transform: translateY(8px);
@@ -74,7 +115,7 @@
         z-index: 35;
         padding: clamp(1.5rem, 5vmin, 3rem);
         text-align: center;
-        background: linear-gradient(155deg, rgba(25, 135, 84, 0.1), rgba(13, 110, 253, 0.1));
+        background: linear-gradient(155deg, var(--final-bg-1), var(--final-bg-2));
         opacity: 0;
         visibility: hidden;
         transform: translateY(8px);
@@ -88,7 +129,7 @@
       .intro-message {
         max-width: min(700px, 92%);
         margin-inline: auto;
-        color: #495057;
+        color: var(--text-subtle);
         font-size: clamp(0.95rem, 1.5vmax, 1.2rem);
       }
 
@@ -99,13 +140,13 @@
       .final-message {
         max-width: min(860px, 95%);
         margin-inline: auto;
-        color: #495057;
+        color: var(--text-subtle);
         font-size: clamp(0.95rem, 1.5vmax, 1.15rem);
       }
 
       .answers-section {
         flex: 1;
-        background: #f8f9fa;
+        background: var(--answers-bg);
         padding-inline: clamp(0.5rem, 1.5vmin, 1rem);
         padding-top: clamp(0.75rem, 2.2vmin, 1.25rem);
         padding-bottom: max(clamp(1rem, 3.5vmin, 1.75rem), calc(env(safe-area-inset-bottom) + 1rem));
@@ -116,6 +157,11 @@
         margin-inline: auto;
         font-size: clamp(1.15rem, 2.4vmin, 2rem);
         transition: opacity 240ms ease, transform 240ms ease;
+        color: var(--question-emphasis-text);
+        display: inline-block;
+        padding: 0.18em 0.45em;
+        border-radius: 0.5em;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--question-emphasis) 80%, #fff 20%), var(--question-emphasis));
       }
 
       .meta-pill {
@@ -123,10 +169,30 @@
       }
 
       .host-line {
-        color: #495057;
+        color: var(--text-subtle);
         margin-inline: auto;
         text-align: center;
         font-size: clamp(0.78rem, 1vmax, 0.95rem);
+      }
+
+      .intro-title,
+      .final-title {
+        color: var(--text-main);
+      }
+
+      .status-badge.intro {
+        background: var(--intro-badge-bg);
+        color: var(--intro-badge-text);
+      }
+
+      .status-badge.final {
+        background: var(--final-badge-bg);
+        color: var(--final-badge-text);
+      }
+
+      .question-pill {
+        background: var(--pill-bg);
+        color: var(--pill-text);
       }
 
       .answers-grid {
@@ -144,17 +210,25 @@
         min-height: 52px;
         font-size: clamp(0.78rem, 1.05vmax, 1.05rem);
         transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease, border-color 180ms ease;
+        border: 2px solid var(--answer-border);
+        color: var(--answer-text);
+        background: linear-gradient(180deg, var(--answer-bg-1), var(--answer-bg-2));
+        font-weight: 700;
       }
 
       .answer-btn:hover {
         transform: translateY(-1px);
-        box-shadow: 0 8px 18px rgba(13, 110, 253, 0.12);
+        box-shadow: 0 8px 18px var(--answer-hover-shadow);
+      }
+
+      .answer-btn:focus-visible {
+        box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--answer-border) 35%, transparent 65%);
       }
 
       .answer-btn.is-correct {
-        background-color: #198754;
-        border-color: #198754;
-        color: #fff;
+        background: var(--feedback-correct);
+        border-color: var(--feedback-correct);
+        color: var(--feedback-correct-text);
       }
 
       .timer-wrap {
@@ -164,30 +238,37 @@
         transform: translate(-50%, -50%);
         width: min(88%, 700px);
         z-index: 20;
-        background: rgba(255, 255, 255, 0.95);
-        border: clamp(1px, 0.25vmin, 2px) solid #dee2e6;
+        background: var(--timer-wrap-bg);
+        border: clamp(1px, 0.25vmin, 2px) solid var(--timer-wrap-border);
         border-radius: 999px;
         padding: clamp(0.3rem, 0.9vmin, 0.45rem);
         transition: box-shadow 200ms ease, transform 200ms ease;
       }
 
       .timer-wrap.urgent {
-        box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15), 0 0.35rem 0.85rem rgba(220, 53, 69, 0.26);
+        box-shadow: 0 0 0 0.2rem var(--urgent-shadow-1), 0 0.35rem 0.85rem var(--urgent-shadow-2);
         animation: pulse 0.75s ease-in-out infinite alternate;
       }
 
       .timer-label {
         font-weight: 600;
         font-size: clamp(0.72rem, 0.9vmax, 0.9rem);
+        color: var(--timer-label);
       }
 
       .progress {
         height: clamp(0.55rem, 1.2vmin, 0.85rem);
+        background-color: var(--progress-bg);
       }
 
       .progress-bar {
         font-size: 0;
         line-height: 1;
+        background: linear-gradient(90deg, var(--timer-bar-start), var(--timer-bar-end));
+      }
+
+      .progress-bar.is-urgent {
+        background: linear-gradient(90deg, var(--timer-urgent-start), var(--timer-urgent-end));
       }
 
       .quiz-shell.is-transitioning .question-text,
@@ -295,32 +376,32 @@
     <main class="app-root">
       <section class="quiz-shell d-flex flex-column is-intro">
         <div id="introScreen" class="intro-screen d-flex flex-column align-items-center justify-content-center gap-3">
-          <span class="badge text-bg-primary-subtle text-primary-emphasis rounded-pill px-3 py-2">Ready?</span>
-          <h1 id="introTitle" class="intro-title fw-bold mb-0">Web Development Quiz</h1>
-          <p id="introMessage" class="intro-message mb-0">Sharpen your basics before the first question appears.</p>
+          <span class="badge status-badge intro rounded-pill px-3 py-2">Ready?</span>
+          <h1 id="introTitle" class="intro-title fw-bold mb-0">Quiz</h1>
+          <p id="introMessage" class="intro-message mb-0">Get ready for the first question.</p>
         </div>
         <div id="finalScreen" class="final-screen d-flex flex-column align-items-center justify-content-center gap-3" aria-hidden="true">
-          <span class="badge text-bg-success-subtle text-success-emphasis rounded-pill px-3 py-2">Quiz Complete</span>
+          <span class="badge status-badge final rounded-pill px-3 py-2">Quiz Complete</span>
           <h1 id="finalTitle" class="final-title fw-bold mb-0">Thank you for watching.</h1>
           <p id="finalMessage" class="final-message mb-0">If you enjoyed this content, please consider subscribing, liking, and supporting us for more similar content.</p>
         </div>
         <div class="question-section d-flex flex-column justify-content-center text-center p-3 p-md-4 gap-2">
           <div class="d-flex justify-content-between align-items-center">
-            <span id="questionPill" class="badge text-bg-dark rounded-pill meta-pill">Question 1 / 5</span>
+            <span id="questionPill" class="badge question-pill rounded-pill meta-pill">Question</span>
             <span class="meta-pill" aria-hidden="true"></span>
           </div>
           <h1 id="questionText" class="question-text fw-semibold mb-0">
-            Which option best describes Bootstrap's primary purpose in web development?
+            Waiting for quiz configuration.
           </h1>
           <div id="hostLine" class="host-line fw-medium">Get ready! Watch answers reveal automatically.</div>
         </div>
 
         <div class="answers-section">
           <div class="answers-grid row g-2 g-md-3 h-100 m-0">
-            <div class="col"><button id="answer0" class="btn btn-outline-primary answer-btn">A.</button></div>
-            <div class="col"><button id="answer1" class="btn btn-outline-primary answer-btn">B.</button></div>
-            <div class="col"><button id="answer2" class="btn btn-outline-primary answer-btn">C.</button></div>
-            <div class="col"><button id="answer3" class="btn btn-outline-primary answer-btn">D.</button></div>
+            <div class="col"><button id="answer0" class="btn answer-btn">A.</button></div>
+            <div class="col"><button id="answer1" class="btn answer-btn">B.</button></div>
+            <div class="col"><button id="answer2" class="btn answer-btn">C.</button></div>
+            <div class="col"><button id="answer3" class="btn answer-btn">D.</button></div>
           </div>
         </div>
 
@@ -338,333 +419,8 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-      const questionBank = [
-        {
-          question: "Which option best describes Bootstrap's primary purpose in web development?",
-          answers: ["Database Management", "Responsive UI Design", "Machine Learning Model", "API Gateway Only"],
-          correctIndex: 1,
-          host: "Clean layouts win on every device."
-        },
-        {
-          question: "What does CSS primarily control in a webpage?",
-          answers: ["Data storage", "Application routing", "Visual presentation", "Server load balancing"],
-          correctIndex: 2,
-          host: "Looks matter—CSS shapes the user experience."
-        },
-        {
-          question: "Which JavaScript method converts JSON text into an object?",
-          answers: ["JSON.stringify", "JSON.parse", "Object.fromJSON", "JSON.convert"],
-          correctIndex: 1,
-          host: "Parsing text into objects keeps data usable."
-        },
-        {
-          question: "Which HTML element is best for the main page heading?",
-          answers: ["<h1>", "<header>", "<title>", "<strong>"],
-          correctIndex: 0,
-          host: "Strong semantics improve accessibility and SEO."
-        },
-        {
-          question: "Why is responsive design important?",
-          answers: ["It reduces JavaScript size only", "It avoids using media queries", "It adapts layouts to different screens", "It removes the need for testing"],
-          correctIndex: 2,
-          host: "One interface, many screen sizes."
-        }
-      ];
-
-      const totalSeconds = 12;
-      const revealDurationMs = 2000;
-      const introDelayMs = 3000;
-      const introContent = {
-        title: "Web Development Quiz",
-        message: "Sharpen your basics before the first question appears."
-      };
-      const finalContent = {
-        title: "Thank you for watching.",
-        message: "If you enjoyed this content, please consider subscribing, liking, and supporting us for more similar content."
-      };
-      let remaining = totalSeconds;
-      let questionIndex = 0;
-      let revealDone = false;
-      let quizCompleted = false;
-      let isRevealing = false;
-      let audioReady = false;
-      let quizStarted = false;
-      let timerInterval;
-      let revealTimeout;
-      let introTimeout;
-      const timerBar = document.getElementById("timerBar");
-      const timerText = document.getElementById("timerText");
-      const progressEl = document.querySelector(".progress");
-      const timerWrap = document.querySelector(".timer-wrap");
-      const quizShell = document.querySelector(".quiz-shell");
-      const introScreen = document.getElementById("introScreen");
-      const introTitle = document.getElementById("introTitle");
-      const introMessage = document.getElementById("introMessage");
-      const finalScreen = document.getElementById("finalScreen");
-      const finalTitle = document.getElementById("finalTitle");
-      const finalMessage = document.getElementById("finalMessage");
-      const questionText = document.getElementById("questionText");
-      const questionPill = document.getElementById("questionPill");
-      const hostLine = document.getElementById("hostLine");
-      const answerButtons = [0, 1, 2, 3].map((index) => document.getElementById(`answer${index}`));
-      const sounds = {
-        ticking: new Audio("asset/sound/clock-tick.mp3"),
-        applause: new Audio("asset/sound/applause.mp3"),
-        cheers: new Audio("asset/sound/cheers.mp3")
-      };
-      sounds.ticking.loop = true;
-
-      Object.values(sounds).forEach((sound) => {
-        sound.preload = "auto";
-      });
-
-      const playSound = (sound, { restart = false } = {}) => {
-        if (!sound) {
-          return;
-        }
-
-        if (restart) {
-          sound.pause();
-          sound.currentTime = 0;
-        }
-
-        sound.play().catch(() => {});
-      };
-
-      const stopSound = (sound) => {
-        if (!sound) {
-          return;
-        }
-
-        sound.pause();
-        sound.currentTime = 0;
-      };
-
-      const stopAllSounds = () => {
-        Object.values(sounds).forEach((sound) => {
-          stopSound(sound);
-        });
-      };
-
-      const startTicking = () => {
-        stopSound(sounds.applause);
-        stopSound(sounds.cheers);
-        playSound(sounds.ticking, { restart: true });
-      };
-      const silentKick = new Audio();
-      silentKick.play().catch(() => {});
-      const unlockAudio = async () => {
-        if (audioReady) {
-          return;
-        }
-
-        const soundList = Object.values(sounds);
-        for (const sound of soundList) {
-          try {
-            sound.muted = true;
-            sound.currentTime = 0;
-            await sound.play();
-          } catch (_error) {
-          }
-
-          sound.pause();
-          sound.currentTime = 0;
-          sound.muted = false;
-        }
-
-        audioReady = true;
-
-        if (!quizCompleted && !isRevealing && remaining > 0) {
-          syncTickingWithState();
-        }
-      };
-
-      const attachAudioFallbackUnlock = () => {
-        const options = { once: true, passive: true };
-        window.addEventListener("pointerdown", unlockAudio, options);
-        window.addEventListener("touchstart", unlockAudio, options);
-        window.addEventListener("keydown", unlockAudio, { once: true });
-      };
-
-      const syncTickingWithState = () => {
-        if (quizCompleted || isRevealing || remaining <= 0) {
-          return;
-        }
-
-        if (sounds.ticking.paused) {
-          startTicking();
-        }
-      };
-
-      const clearAnswerState = () => {
-        answerButtons.forEach((button) => {
-          button.classList.remove("is-correct");
-          button.disabled = false;
-        });
-      };
-
-      const renderQuestion = () => {
-        const current = questionBank[questionIndex];
-        questionText.textContent = current.question;
-        hostLine.textContent = current.host || "Choose your answer before time runs out.";
-        questionPill.textContent = `Question ${questionIndex + 1} / ${questionBank.length}`;
-
-        answerButtons.forEach((button, index) => {
-          const optionLabel = String.fromCharCode(65 + index);
-          button.textContent = `${optionLabel}. ${current.answers[index]}`;
-        });
-      };
-
-      const revealAnswer = () => {
-        if (revealDone) {
-          return;
-        }
-
-        const current = questionBank[questionIndex];
-        revealDone = true;
-
-        answerButtons.forEach((button, index) => {
-          button.disabled = true;
-          if (index === current.correctIndex) {
-            button.classList.add("is-correct");
-          }
-        });
-
-        hostLine.textContent = "Time up! Correct answer highlighted.";
-      };
-
-      const runTransition = () => {
-        quizShell.classList.add("is-transitioning");
-        setTimeout(() => {
-          quizShell.classList.remove("is-transitioning");
-        }, 260);
-      };
-
-      const nextQuestion = () => {
-        questionIndex += 1;
-        remaining = totalSeconds;
-        revealDone = false;
-        isRevealing = false;
-        timerBar.classList.remove("bg-danger");
-        timerBar.classList.add("bg-primary", "progress-bar-animated");
-        timerWrap.classList.remove("urgent");
-        clearAnswerState();
-        runTransition();
-        renderQuestion();
-        setTimeout(() => {
-          syncTickingWithState();
-        }, 260);
-      };
-
-      const completeQuiz = () => {
-        if (quizCompleted) {
-          return;
-        }
-
-        quizCompleted = true;
-        isRevealing = false;
-        clearInterval(timerInterval);
-        clearTimeout(revealTimeout);
-        stopAllSounds();
-        timerBar.classList.remove("progress-bar-animated");
-        timerWrap.classList.remove("urgent");
-        questionPill.textContent = `Completed ${questionBank.length} / ${questionBank.length}`;
-        timerText.textContent = "Done";
-        hostLine.textContent = "All questions completed. Well done!";
-        playSound(sounds.cheers, { restart: true });
-        quizShell.classList.add("is-final");
-        if (finalScreen) {
-          finalScreen.setAttribute("aria-hidden", "false");
-        }
-      };
-
-      const beginRevealPhase = () => {
-        if (isRevealing || quizCompleted) {
-          return;
-        }
-
-        isRevealing = true;
-        stopSound(sounds.ticking);
-        timerBar.classList.remove("progress-bar-animated");
-        revealAnswer();
-        playSound(sounds.applause, { restart: true });
-
-        clearTimeout(revealTimeout);
-        revealTimeout = setTimeout(() => {
-          stopSound(sounds.applause);
-
-          if (questionIndex >= questionBank.length - 1) {
-            completeQuiz();
-            return;
-          }
-
-          nextQuestion();
-        }, revealDurationMs);
-      };
-
-      const tick = () => {
-        if (quizCompleted || isRevealing) {
-          return;
-        }
-
-        const percent = Math.max(0, Math.round((remaining / totalSeconds) * 100));
-        timerBar.style.width = `${percent}%`;
-        timerBar.textContent = "";
-        timerText.textContent = `${remaining}s`;
-        progressEl.setAttribute("aria-valuenow", String(remaining));
-        progressEl.setAttribute("aria-valuemax", String(totalSeconds));
-
-        if (remaining <= 4) {
-          timerBar.classList.add("bg-danger");
-          timerWrap.classList.add("urgent");
-        }
-
-        if (remaining <= 0) {
-          beginRevealPhase();
-          return;
-        }
-
-        remaining -= 1;
-      };
-
-      const hideIntroAndStartQuiz = () => {
-        if (quizStarted) {
-          return;
-        }
-
-        quizStarted = true;
-        clearTimeout(introTimeout);
-        quizShell.classList.remove("is-intro");
-        if (introScreen) {
-          introScreen.setAttribute("aria-hidden", "true");
-        }
-        renderQuestion();
-        unlockAudio().finally(() => {
-          startTicking();
-          tick();
-          timerInterval = setInterval(tick, 1000);
-        });
-      };
-
-      timerBar.classList.add("bg-primary");
-      attachAudioFallbackUnlock();
-      introTitle.textContent = introContent.title;
-      introMessage.textContent = introContent.message;
-      finalTitle.textContent = finalContent.title;
-      finalMessage.textContent = finalContent.message;
-
-      introTimeout = setTimeout(() => {
-        hideIntroAndStartQuiz();
-      }, introDelayMs);
-
-      if (introScreen) {
-        introScreen.addEventListener("click", () => {
-          unlockAudio().then(() => {
-            hideIntroAndStartQuiz();
-          });
-        }, { once: true });
-      }
-    </script>
+    <script src="asset/js/quiz-engine.js"></script>
   </body>
 </html>
+
+

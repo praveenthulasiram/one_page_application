@@ -1,0 +1,37 @@
+{
+  "defaultDataset": "asset/data/quizzes/generative-ai/generative-ai-001.json",
+  "datasets": [
+    {
+      "topic": "general",
+      "path": "asset/data/quizzes/general/general-001.json"
+    },
+    {
+      "topic": "generative-ai",
+      "path": "asset/data/quizzes/generative-ai/generative-ai-001.json"
+    },
+    {
+      "topic": "generative-ai",
+      "path": "asset/data/quizzes/generative-ai/generative-ai-002.json"
+    },
+    {
+      "topic": "python",
+      "path": "asset/data/quizzes/python/python-001.json"
+    },
+    {
+      "topic": "python",
+      "path": "asset/data/quizzes/python/python-002.json"
+    },
+    {
+      "topic": "python",
+      "path": "asset/data/quizzes/python/python-003.json"
+    },
+    {
+      "topic": "python",
+      "path": "asset/data/quizzes/python/python-004.json"
+    },
+    {
+      "topic": "python",
+      "path": "asset/data/quizzes/python/python-005.json"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "questions": [
+    {
+      "question": "What can Generative AI help create?",
+      "answers": [
+        "Funny stories",
+        "Banana bread",
+        "Superheroes",
+        "Dinosaurs"
+      ],
+      "correctIndex": 0,
+      "host": "Great start! Keep going!"
+    },
+    {
+      "question": "Which is an example of Generative AI?",
+      "answers": [
+        "ChatGPT",
+        "Calculator",
+        "Weather app",
+        "Flashlight"
+      ],
+      "correctIndex": 0,
+      "host": "Awesome guess! Next one!"
+    }
+  ],
+  "timing": {
+    "questionSeconds": 7,
+    "revealDurationMs": 2000,
+    "introDelayMs": 3000,
+    "urgentThresholdSeconds": 4,
+    "tickIntervalMs": 1000
+  },
+  "content": {
+    "intro": {
+      "title": "Generative Ai Quiz",
+      "message": "Get ready for fun, fast, easy-to-guess questions."
+    },
+    "final": {
+      "title": "Quiz complete!",
+      "message": "Great job! Thanks for watching and playing along."
+    }
+  },
+  "theme": {
+    "name": "primary-play"
+  }
+}

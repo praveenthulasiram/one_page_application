@@ -1,0 +1,42 @@
+{
+  "questions": [
+    {
+      "question": "Which tool helps style a webpage fast?",
+      "answers": ["Bootstrap", "Firewall", "Docker", "Photoshop"],
+      "correctIndex": 0,
+      "host": "Great builders pick smart tools."
+    },
+    {
+      "question": "What does CSS change on a page?",
+      "answers": ["Color and layout", "Internet speed", "File size", "Battery level"],
+      "correctIndex": 0,
+      "host": "Style makes websites pop."
+    },
+    {
+      "question": "Which command reads JSON text into data?",
+      "answers": ["JSON.parse", "JSON.paint", "JSON.push", "JSON.code"],
+      "correctIndex": 0,
+      "host": "Parsing turns text into useful objects."
+    }
+  ],
+  "timing": {
+    "questionSeconds": 5,
+    "revealDurationMs": 2000,
+    "introDelayMs": 3000,
+    "urgentThresholdSeconds": 4,
+    "tickIntervalMs": 1000
+  },
+  "content": {
+    "intro": {
+      "title": "Web Development Quiz",
+      "message": "Sharpen your basics before the first question appears."
+    },
+    "final": {
+      "title": "Thank you for watching.",
+      "message": "If you enjoyed this content, please consider subscribing, liking, and supporting us for more similar content."
+    }
+  },
+  "theme": {
+    "name": "primary-play"
+  }
+}
