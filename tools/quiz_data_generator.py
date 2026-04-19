@@ -30,7 +30,8 @@ DEFAULT_USER_PROMPT_TEMPLATE = (
     "      \"question\": \"string\",\n"
     "      \"answers\": [\"string\", \"string\", \"string\", \"string\"],\n"
     "      \"correctIndex\": 0,\n"
-    "      \"host\": \"very short encouraging line\"\n"
+    "      \"host\": \"very short encouraging line\",\n"
+    "      \"imageUrl\": \"https URL for the clue image\"\n"
     "    }}\n"
     "  ]\n"
     "}}\n\n"
@@ -38,6 +39,7 @@ DEFAULT_USER_PROMPT_TEMPLATE = (
     "- 4 answers per question, exactly one correct answer\n"
     "- Every question is a clue about an animal\n"
     "- Use this style: clue + 'Who am I?'\n"
+    "- imageUrl is required and must be a direct https image link\n"
     "- Answers must be short (1-4 words when possible)\n"
     "- Avoid trick wording, negatives, or ambiguity\n"
     "- Keep question text under 16 words\n"
@@ -51,50 +53,88 @@ ANIMAL_QUESTION_BANK: List[Dict[str, Any]] = [
         "answers": ["Elephant", "Giraffe", "Tiger", "Penguin"],
         "correctIndex": 0,
         "host": "Use the clue and guess!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/63/African_elephant_warning_raised_trunk.jpg",
     },
     {
         "question": "I roar loudly and live in a pride. Who am I?",
         "answers": ["Lion", "Rabbit", "Dolphin", "Koala"],
         "correctIndex": 0,
         "host": "Listen to the clue!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg",
     },
     {
         "question": "I am black and white and love bamboo. Who am I?",
         "answers": ["Panda", "Zebra", "Hippo", "Fox"],
         "correctIndex": 0,
         "host": "Think of a bamboo lover!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG",
     },
     {
         "question": "I hop and carry my baby in a pouch. Who am I?",
         "answers": ["Kangaroo", "Horse", "Seal", "Owl"],
         "correctIndex": 0,
         "host": "Big jump clue!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Kangaroo_Australia_01_11_2008_-_retouch.JPG",
     },
     {
         "question": "I have a very long neck for tall trees. Who am I?",
         "answers": ["Giraffe", "Shark", "Otter", "Peacock"],
         "correctIndex": 0,
         "host": "Reach up and guess!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Giraffe_standing.jpg",
     },
     {
         "question": "I live in the ocean and do flips. Who am I?",
         "answers": ["Dolphin", "Camel", "Parrot", "Panda"],
         "correctIndex": 0,
         "host": "Splashy clue time!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Delphinus_delphis_with_calf.jpg",
     },
     {
         "question": "I waddle on ice and cannot fly. Who am I?",
         "answers": ["Penguin", "Eagle", "Monkey", "Deer"],
         "correctIndex": 0,
         "host": "Cold place clue!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/00/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg",
     },
     {
         "question": "I have orange fur with black stripes. Who am I?",
         "answers": ["Tiger", "Whale", "Goat", "Flamingo"],
         "correctIndex": 0,
         "host": "Stripe detective time!",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg",
     },
 ]
+
+ANIMAL_IMAGE_URLS: Dict[str, str] = {
+    "elephant": "https://upload.wikimedia.org/wikipedia/commons/6/63/African_elephant_warning_raised_trunk.jpg",
+    "lion": "https://upload.wikimedia.org/wikipedia/commons/7/73/Lion_waiting_in_Namibia.jpg",
+    "panda": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Grosser_Panda.JPG",
+    "kangaroo": "https://upload.wikimedia.org/wikipedia/commons/0/0c/Kangaroo_Australia_01_11_2008_-_retouch.JPG",
+    "giraffe": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Giraffe_standing.jpg",
+    "dolphin": "https://upload.wikimedia.org/wikipedia/commons/4/4f/Delphinus_delphis_with_calf.jpg",
+    "penguin": "https://upload.wikimedia.org/wikipedia/commons/0/00/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg",
+    "tiger": "https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg",
+    "zebra": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Plains_Zebra_Equus_quagga.jpg",
+    "rabbit": "https://upload.wikimedia.org/wikipedia/commons/5/59/Mountain_Cottontail_2.jpg",
+    "koala": "https://upload.wikimedia.org/wikipedia/commons/4/49/Koala_climbing_tree.jpg",
+    "fox": "https://upload.wikimedia.org/wikipedia/commons/1/16/2010-brown-fox.jpg",
+    "hippo": "https://upload.wikimedia.org/wikipedia/commons/1/12/Hippopotamus_in_South_Africa.jpg",
+    "horse": "https://upload.wikimedia.org/wikipedia/commons/d/de/Nokota_Horses_cropped.jpg",
+    "seal": "https://upload.wikimedia.org/wikipedia/commons/2/21/Arctocephalus_australis.jpg",
+    "owl": "https://upload.wikimedia.org/wikipedia/commons/3/32/Bubo_virginianus_06.jpg",
+    "shark": "https://upload.wikimedia.org/wikipedia/commons/5/56/White_shark.jpg",
+    "otter": "https://upload.wikimedia.org/wikipedia/commons/2/20/Lutra_lutra_retouched.jpg",
+    "peacock": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Peacock_Plumage.jpg",
+    "camel": "https://upload.wikimedia.org/wikipedia/commons/2/28/Camel_02.jpg",
+    "parrot": "https://upload.wikimedia.org/wikipedia/commons/4/45/Amazona_aestiva_-upper_body-8a.jpg",
+    "eagle": "https://upload.wikimedia.org/wikipedia/commons/1/18/Bald_Eagle_Portrait.jpg",
+    "monkey": "https://upload.wikimedia.org/wikipedia/commons/8/87/Monkeys_at_Khao_Lommuak%2C_Thailand.jpg",
+    "deer": "https://upload.wikimedia.org/wikipedia/commons/4/40/Red_deer_stag_2009_denmark.jpg",
+    "whale": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Southern_right_whale7.jpg",
+    "goat": "https://upload.wikimedia.org/wikipedia/commons/b/b2/Hausziege_04.jpg",
+    "flamingo": "https://upload.wikimedia.org/wikipedia/commons/6/63/Flamingo_Laguna_Colorada.jpg",
+}
 
 
 def slugify(value: str) -> str:
@@ -107,6 +147,19 @@ def to_positive_int(value: int, fallback: int) -> int:
     return value if isinstance(value, int) and value > 0 else fallback
 
 
+def normalize_image_url(value: Any) -> str:
+    image_url = str(value or "").strip()
+    return image_url if image_url.startswith(("http://", "https://")) else ""
+
+
+def infer_image_url(answers: List[str], correct_index: int) -> str:
+    if correct_index < 0 or correct_index >= len(answers):
+        return ""
+    correct_answer = answers[correct_index]
+    key = slugify(correct_answer).replace("-", " ").split(" ")[0]
+    return ANIMAL_IMAGE_URLS.get(key, "")
+
+
 def normalize_questions(raw_questions: Any, question_count: int) -> List[Dict[str, Any]]:
     if not isinstance(raw_questions, list):
         return []
@@ -117,6 +170,7 @@ def normalize_questions(raw_questions: Any, question_count: int) -> List[Dict[st
         answers = item.get("answers", []) if isinstance(item, dict) else []
         correct_index = item.get("correctIndex") if isinstance(item, dict) else None
         host = str(item.get("host", "")).strip() if isinstance(item, dict) else ""
+        image_url = normalize_image_url(item.get("imageUrl")) if isinstance(item, dict) else ""
 
         if not question or not isinstance(answers, list) or len(answers) < 4:
             continue
@@ -125,6 +179,9 @@ def normalize_questions(raw_questions: Any, question_count: int) -> List[Dict[st
             continue
         if not isinstance(correct_index, int) or correct_index < 0 or correct_index >= len(cleaned_answers):
             continue
+        image_url = image_url or infer_image_url(cleaned_answers, correct_index)
+        if not image_url:
+            continue
 
         normalized.append(
             {
@@ -132,6 +189,7 @@ def normalize_questions(raw_questions: Any, question_count: int) -> List[Dict[st
                 "answers": cleaned_answers,
                 "correctIndex": correct_index,
                 "host": host,
+                "imageUrl": image_url,
             }
         )
         if len(normalized) >= question_count:
@@ -162,6 +220,7 @@ def build_template_animal_questions(question_count: int, seed_offset: int = 0) -
                 "answers": list(source["answers"]),
                 "correctIndex": int(source["correctIndex"]),
                 "host": source["host"],
+                "imageUrl": str(source.get("imageUrl", "")).strip() or infer_image_url(list(source["answers"]), int(source["correctIndex"])),
             }
         )
     return selected
