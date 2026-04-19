@@ -2,7 +2,7 @@
 
 Frontend quiz renderer + Python quiz-data generation pipeline.
 
-The frontend (`index.html` + `asset/js/quiz-engine.js`) **does not generate questions**. It only renders dataset JSON files.
+The frontend (`index.html`, `index2.html` + `asset/js/quiz-engine.js`) **does not generate questions**. It only renders dataset JSON files.
 
 ---
 
@@ -18,8 +18,10 @@ The frontend (`index.html` + `asset/js/quiz-engine.js`) **does not generate ques
 
 ## 2) Folder Structure
 
-- `index.html` — UI shell
+- `index.html` — original UI shell
+- `index2.html` — modern hook + iframe quiz UI shell
 - `asset/js/quiz-engine.js` — quiz runtime logic
+- `asset/img/quiz-bg.gif` — animated background used by `index2.html`
 - `asset/data/quizzes/manifest.json` — dataset index + default
 - `asset/data/quizzes/<topic>/<topic>-NNN.json` — quiz datasets
 - `tools/quiz_data_generator.py` — reusable Python generator/manager CLI
@@ -38,7 +40,8 @@ Each dataset file should be render-ready and include:
       "question": "string",
       "answers": ["A", "B", "C", "D"],
       "correctIndex": 0,
-      "host": "optional short line"
+      "host": "optional short line",
+      "imageUrl": "optional iframe image URL"
     }
   ],
   "timing": {
@@ -58,8 +61,9 @@ Each dataset file should be render-ready and include:
 
 Notes:
 - `questions` is required.
-- `answers` should have 4 options.
+- `answers` can have 3 or 4 options.
 - `correctIndex` must point to one valid answer.
+- `imageUrl` is optional and used by `index2.html` to populate the media iframe.
 
 ---
 
@@ -74,6 +78,7 @@ Selection order:
 Examples:
 - `index.html?dataset=asset/data/quizzes/general/general-001.json`
 - `index.html?dataset=asset/data/quizzes/python/python-003.json`
+- `index2.html?dataset=asset/data/quizzes/general/general-001.json`
 
 ---
 
@@ -136,7 +141,7 @@ python tools/quiz_data_generator.py manifest
 
 ---
 
-## 7) How to Test `index.html`
+## 7) How to Test `index.html` and `index2.html`
 
 ### 7.1 Start a local server (recommended)
 
@@ -149,6 +154,8 @@ python -m http.server 5500
 Open in browser:
 - `http://localhost:5500/index.html`
 - `http://localhost:5500/index.html?dataset=asset/data/quizzes/python/python-001.json`
+- `http://localhost:5500/index2.html`
+- `http://localhost:5500/index2.html?dataset=asset/data/quizzes/python/python-001.json`
 
 ### 7.2 What to verify
 
@@ -156,6 +163,34 @@ Open in browser:
 - Selected dataset is rendered when `dataset` param changes.
 - Timer follows dataset value (`timing.questionSeconds`).
 - Theme/content overrides display correctly.
+- On `index2.html`, iframe media updates from `questions[].imageUrl` when present.
+
+### 7.3 One-command local start (PowerShell)
+
+Use the helper script to start the server and open the landing page automatically:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/start_server.ps1
+```
+
+Common options:
+
+```powershell
+# Custom port
+powershell -ExecutionPolicy Bypass -File tools/start_server.ps1 -Port 5501
+
+# Open a specific dataset
+powershell -ExecutionPolicy Bypass -File tools/start_server.ps1 -Dataset "asset/data/quizzes/python/python-001.json"
+
+# Start without opening browser
+powershell -ExecutionPolicy Bypass -File tools/start_server.ps1 -NoOpen
+```
+
+The script prints a server PID. Stop the server with:
+
+```powershell
+Stop-Process -Id <PID>
+```
 
 ---
 
@@ -216,5 +251,6 @@ python -m http.server 5500
 Open:
 
 - `http://localhost:5500/index.html?dataset=asset/data/quizzes/python/python-001.json`
+- `http://localhost:5500/index2.html?dataset=asset/data/quizzes/python/python-001.json`
 
 python tools/quiz_data_generator.py generate --topic "Generative Ai" --num-files 2 --questions-per-file 2 --question-seconds 7 --mode api

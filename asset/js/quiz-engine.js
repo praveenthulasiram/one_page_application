@@ -176,10 +176,31 @@
           question: String(item?.question ?? "").trim(),
           answers,
           correctIndex,
-          host: String(item?.host ?? "").trim()
+          host: String(item?.host ?? "").trim(),
+          imageUrl: String(item?.imageUrl ?? "").trim()
         };
       })
       .filter((item) => item.question && item.answers.length > 0 && item.correctIndex >= 0 && item.correctIndex < item.answers.length);
+  };
+
+  const sanitizeMediaUrl = (value) => {
+    const source = String(value ?? "").trim();
+    if (!source) {
+      return "";
+    }
+    if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("/") || source.startsWith("./") || source.startsWith("../")) {
+      return source;
+    }
+    return "";
+  };
+
+  const buildImageOnlyIframeDoc = (imageUrl) => {
+    const escapedUrl = String(imageUrl ?? "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\"/g, "&quot;");
+    return `<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#dff3ff,#bfe8ff)}.frame{width:100%;height:100%;padding:1.6%;display:grid;place-items:center}.frame img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px;}</style></head><body><div class="frame"><img src="${escapedUrl}" alt="Quiz visual" referrerpolicy="no-referrer"/></div></body></html>`;
   };
 
   const mergeContent = (content) => {
@@ -301,7 +322,10 @@
     const questionText = document.getElementById("questionText");
     const questionPill = document.getElementById("questionPill");
     const hostLine = document.getElementById("hostLine");
+    const questionMediaFrame = document.getElementById("questionMediaFrame");
     const answerButtons = [0, 1, 2, 3].map((index) => document.getElementById(`answer${index}`)).filter(Boolean);
+    const questionPillMode = String(quizShell?.dataset?.questionPill || "").trim().toLowerCase();
+    const defaultQuestionImageUrl = sanitizeMediaUrl(quizShell?.dataset?.defaultImageUrl);
 
     if (!timerBar || !timerText || !progressEl || !timerWrap || !quizShell || !questionText || !questionPill || !hostLine || answerButtons.length === 0) {
       return { ok: false, reason: "missing_dom_elements" };
@@ -443,14 +467,40 @@
       const current = questionBank[questionIndex];
       questionText.textContent = current.question;
       hostLine.textContent = current.host || mergedContent.defaultHostLine;
-      questionPill.textContent = `Question ${questionIndex + 1} / ${questionBank.length}`;
+      questionPill.textContent = questionPillMode === "number-only" ? String(questionIndex + 1) : `Question ${questionIndex + 1} / ${questionBank.length}`;
+
+      if (questionMediaFrame instanceof HTMLIFrameElement) {
+        const questionImageUrl = sanitizeMediaUrl(current.imageUrl) || defaultQuestionImageUrl;
+        if (questionImageUrl) {
+          const mediaMode = String(questionMediaFrame.dataset?.mediaMode || "").trim().toLowerCase();
+          if (mediaMode === "image-only") {
+            questionMediaFrame.removeAttribute("src");
+            questionMediaFrame.srcdoc = buildImageOnlyIframeDoc(questionImageUrl);
+          } else {
+            questionMediaFrame.removeAttribute("srcdoc");
+            questionMediaFrame.src = questionImageUrl;
+          }
+        }
+      } else if (questionMediaFrame instanceof HTMLImageElement) {
+        const questionImageUrl = sanitizeMediaUrl(current.imageUrl) || defaultQuestionImageUrl;
+        if (questionImageUrl) {
+          questionMediaFrame.src = questionImageUrl;
+        }
+      }
 
       answerButtons.forEach((button, index) => {
         const optionLabel = String.fromCharCode(65 + index);
         const answerText = current.answers[index];
         button.hidden = !answerText;
         button.disabled = !answerText;
-        button.textContent = answerText ? `${optionLabel}. ${answerText}` : `${optionLabel}.`;
+        const optionLabelEl = button.querySelector("[data-option-label]");
+        const optionTextEl = button.querySelector("[data-option-text]");
+        if (optionLabelEl && optionTextEl) {
+          optionLabelEl.textContent = optionLabel;
+          optionTextEl.textContent = answerText || "";
+        } else {
+          button.textContent = answerText ? `${optionLabel}. ${answerText}` : `${optionLabel}.`;
+        }
       });
     };
 
@@ -504,7 +554,7 @@
       stopAllSounds();
       timerBar.classList.remove("progress-bar-animated");
       timerWrap.classList.remove("urgent");
-      questionPill.textContent = `Completed ${questionBank.length} / ${questionBank.length}`;
+      questionPill.textContent = questionPillMode === "number-only" ? String(questionBank.length) : `Completed ${questionBank.length} / ${questionBank.length}`;
       timerText.textContent = "Done";
       hostLine.textContent = mergedContent.completeHostLine;
       playSound(sounds.cheers, { restart: true });

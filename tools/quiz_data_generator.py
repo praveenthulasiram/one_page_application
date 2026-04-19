@@ -15,14 +15,14 @@ QUIZ_ROOT = REPO_ROOT / "asset" / "data" / "quizzes"
 MANIFEST_PATH = QUIZ_ROOT / "manifest.json"
 
 DEFAULT_SYSTEM_PROMPT = (
-    "You create ultra-clear, upbeat multiple-choice quiz questions for kids ages 6-10. "
-    "Keep language simple, concrete, and easy to guess in under 5 seconds."
+    "You create ultra-clear, upbeat animal-guessing quiz questions for kids ages 6-10. "
+    "Each question gives one simple clue, then asks kids to guess the animal."
 )
 
 DEFAULT_USER_PROMPT_TEMPLATE = (
-    "Create {question_count} kid-friendly multiple-choice quiz questions about {topic}. "
+    "Create {question_count} kid-friendly multiple-choice guess-the-animal quiz questions about {topic}. "
     "Do lightweight fact checking from common knowledge before writing. "
-    "Make each question short, fun, and highly guessable for engagement.\n\n"
+    "Make each question short, playful, and easy to guess from a clue.\n\n"
     "Output JSON only with this shape:\n"
     "{{\n"
     "  \"questions\": [\n"
@@ -36,12 +36,65 @@ DEFAULT_USER_PROMPT_TEMPLATE = (
     "}}\n\n"
     "Rules:\n"
     "- 4 answers per question, exactly one correct answer\n"
+    "- Every question is a clue about an animal\n"
+    "- Use this style: clue + 'Who am I?'\n"
     "- Answers must be short (1-4 words when possible)\n"
     "- Avoid trick wording, negatives, or ambiguity\n"
-    "- Keep question text under 12 words\n"
+    "- Keep question text under 16 words\n"
     "- Keep host line under 10 words\n"
-    "- Prioritize excitement and clarity over difficulty"
+    "- Prioritize fun, confidence, and clarity over difficulty"
 )
+
+ANIMAL_QUESTION_BANK: List[Dict[str, Any]] = [
+    {
+        "question": "I have a long trunk and big ears. Who am I?",
+        "answers": ["Elephant", "Giraffe", "Tiger", "Penguin"],
+        "correctIndex": 0,
+        "host": "Use the clue and guess!",
+    },
+    {
+        "question": "I roar loudly and live in a pride. Who am I?",
+        "answers": ["Lion", "Rabbit", "Dolphin", "Koala"],
+        "correctIndex": 0,
+        "host": "Listen to the clue!",
+    },
+    {
+        "question": "I am black and white and love bamboo. Who am I?",
+        "answers": ["Panda", "Zebra", "Hippo", "Fox"],
+        "correctIndex": 0,
+        "host": "Think of a bamboo lover!",
+    },
+    {
+        "question": "I hop and carry my baby in a pouch. Who am I?",
+        "answers": ["Kangaroo", "Horse", "Seal", "Owl"],
+        "correctIndex": 0,
+        "host": "Big jump clue!",
+    },
+    {
+        "question": "I have a very long neck for tall trees. Who am I?",
+        "answers": ["Giraffe", "Shark", "Otter", "Peacock"],
+        "correctIndex": 0,
+        "host": "Reach up and guess!",
+    },
+    {
+        "question": "I live in the ocean and do flips. Who am I?",
+        "answers": ["Dolphin", "Camel", "Parrot", "Panda"],
+        "correctIndex": 0,
+        "host": "Splashy clue time!",
+    },
+    {
+        "question": "I waddle on ice and cannot fly. Who am I?",
+        "answers": ["Penguin", "Eagle", "Monkey", "Deer"],
+        "correctIndex": 0,
+        "host": "Cold place clue!",
+    },
+    {
+        "question": "I have orange fur with black stripes. Who am I?",
+        "answers": ["Tiger", "Whale", "Goat", "Flamingo"],
+        "correctIndex": 0,
+        "host": "Stripe detective time!",
+    },
+]
 
 
 def slugify(value: str) -> str:
@@ -93,6 +146,25 @@ def strip_code_fences(text: str) -> str:
         raw = re.sub(r"^```(?:json)?\s*", "", raw, flags=re.IGNORECASE)
         raw = re.sub(r"\s*```$", "", raw)
     return raw.strip()
+
+
+def build_template_animal_questions(question_count: int, seed_offset: int = 0) -> List[Dict[str, Any]]:
+    if question_count <= 0:
+        return []
+
+    selected: List[Dict[str, Any]] = []
+    bank_size = len(ANIMAL_QUESTION_BANK)
+    for index in range(question_count):
+        source = ANIMAL_QUESTION_BANK[(seed_offset + index) % bank_size]
+        selected.append(
+            {
+                "question": source["question"],
+                "answers": list(source["answers"]),
+                "correctIndex": int(source["correctIndex"]),
+                "host": source["host"],
+            }
+        )
+    return selected
 
 
 def call_openai_compatible(
@@ -149,12 +221,12 @@ def build_dataset(
         },
         "content": {
             "intro": {
-                "title": f"{topic_label} Quiz",
-                "message": "Get ready for fun, fast, easy-to-guess questions.",
+                "title": f"{topic_label} Animal Quiz",
+                "message": "Read the clue and guess the animal!",
             },
             "final": {
-                "title": "Quiz complete!",
-                "message": "Great job! Thanks for watching and playing along.",
+                "title": "Great guessing!",
+                "message": "Nice job! Did you find all the animals?",
             },
         },
         "theme": {"name": theme_name},
@@ -251,16 +323,7 @@ def command_generate(args: argparse.Namespace) -> int:
                 print(f"Error: model returned {len(questions)} valid questions, expected {question_count}.", file=sys.stderr)
                 return 1
         else:
-            questions = []
-            for question_index in range(1, question_count + 1):
-                questions.append(
-                    {
-                        "question": f"{topic} question {question_index}?",
-                        "answers": ["Option A", "Option B", "Option C", "Option D"],
-                        "correctIndex": 0,
-                        "host": "Pick the best answer!",
-                    }
-                )
+            questions = build_template_animal_questions(question_count=question_count, seed_offset=index - 1)
 
         dataset = build_dataset(
             questions=questions,
