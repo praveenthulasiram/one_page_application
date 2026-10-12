@@ -1,0 +1,218 @@
+{
+  "common-bottlenose-dolphin": {
+    "path": "asset/img/quiz/common-bottlenose-dolphin.jpg",
+    "credit": {
+      "file": "Tursiops truncatus 01-cropped.jpg",
+      "author": "NASA",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Tursiops_truncatus_01-cropped.jpg"
+    }
+  },
+  "polar-bear": {
+    "path": "asset/img/quiz/polar-bear.jpg",
+    "credit": {
+      "file": "Polar Bear - Alaska (cropped).jpg",
+      "author": "Alan Wilson",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Polar_Bear_-_Alaska_(cropped).jpg"
+    }
+  },
+  "blue-whale": {
+    "path": "asset/img/quiz/blue-whale.jpg",
+    "credit": {
+      "file": "Anim1754 - Flickr - NOAA Photo Library.jpg",
+      "author": "NOAA Photo Library",
+      "license": "Public domain",
+      "source": "https://commons.wikimedia.org/wiki/File:Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg"
+    }
+  },
+  "indian-peafowl": {
+    "path": "asset/img/quiz/indian-peafowl.jpg",
+    "credit": {
+      "file": "Peacock on tree (52077240794).jpg",
+      "author": "Kandukuru Nagarjun from Bangalore, India",
+      "license": "CC BY 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Peacock_on_tree_(52077240794).jpg"
+    }
+  },
+  "tiger": {
+    "path": "asset/img/quiz/tiger.jpg",
+    "credit": {
+      "file": "Bengal tiger (Panthera tigris tigris) female 3 crop.jpg",
+      "author": "Charles J. Sharp",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Bengal_tiger_(Panthera_tigris_tigris)_female_3_crop.jpg"
+    }
+  },
+  "green-sea-turtle": {
+    "path": "asset/img/quiz/green-sea-turtle.jpg",
+    "credit": {
+      "file": "Green sea turtle (Chelonia mydas) Moorea.jpg",
+      "author": "Charles J. Sharp",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Green_sea_turtle_(Chelonia_mydas)_Moorea.jpg"
+    }
+  },
+  "hedgehog": {
+    "path": "asset/img/quiz/hedgehog.jpg",
+    "credit": {
+      "file": "Igel.JPG",
+      "author": "Gibe",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Igel.JPG"
+    }
+  },
+  "nile-crocodile": {
+    "path": "asset/img/quiz/nile-crocodile.jpg",
+    "credit": {
+      "file": "NileCrocodile.jpg",
+      "author": "Dewet",
+      "license": "CC BY-SA 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:NileCrocodile.jpg"
+    }
+  },
+  "emperor-penguin": {
+    "path": "asset/img/quiz/emperor-penguin.jpg",
+    "credit": {
+      "file": "Aptenodytes forsteri -Snow Hill Island, Antarctica -adults and juvenile-8.jpg",
+      "author": "Ian Duffy from UK",
+      "license": "CC BY 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Aptenodytes_forsteri_-Snow_Hill_Island,_Antarctica_-adults_and_juvenile-8.jpg"
+    }
+  },
+  "cheetah": {
+    "path": "asset/img/quiz/cheetah.jpg",
+    "credit": {
+      "file": "Male cheetah facing left in South Africa.jpg",
+      "author": "AfricanConservation",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Male_cheetah_facing_left_in_South_Africa.jpg"
+    }
+  },
+  "american-flamingo": {
+    "path": "asset/img/quiz/american-flamingo.jpg",
+    "credit": {
+      "file": "American Flamingo JG.jpg",
+      "author": "JeffreyGammon",
+      "license": "CC BY 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:American_Flamingo_JG.jpg"
+    }
+  },
+  "plains-zebra": {
+    "path": "asset/img/quiz/plains-zebra.jpg",
+    "credit": {
+      "file": "Equus quagga burchellii - Etosha, 2014.jpg",
+      "author": "Yathin S Krishnappa",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Equus_quagga_burchellii_-_Etosha,_2014.jpg"
+    }
+  },
+  "african-bush-elephant": {
+    "path": "asset/img/quiz/african-bush-elephant.jpg",
+    "credit": {
+      "file": "178 Male African bush elephant in Etosha National Park Photo by Giles Laurent.jpg",
+      "author": "Giles Laurent",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg"
+    }
+  },
+  "great-horned-owl": {
+    "path": "asset/img/quiz/great-horned-owl.jpg",
+    "credit": {
+      "file": "Bubo virginianus 06.jpg",
+      "author": "Greg Hume",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Bubo_virginianus_06.jpg"
+    }
+  },
+  "common-octopus": {
+    "path": "asset/img/quiz/common-octopus.jpg",
+    "credit": {
+      "file": "Octopus2.jpg",
+      "author": "albert kok",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Octopus2.jpg"
+    }
+  },
+  "red-kangaroo": {
+    "path": "asset/img/quiz/red-kangaroo.jpg",
+    "credit": {
+      "file": "Red kangaroo - melbourne zoo.jpg",
+      "author": "fir0002 flagstaffotos [at] gmail.com Canon 20D + Canon 70-200mm f/2.8 L",
+      "license": "GFDL 1.2",
+      "source": "https://commons.wikimedia.org/wiki/File:Red_kangaroo_-_melbourne_zoo.jpg"
+    }
+  },
+  "western-honey-bee": {
+    "path": "asset/img/quiz/western-honey-bee.jpg",
+    "credit": {
+      "file": "Apis mellifera Western honey bee.jpg",
+      "author": "Andreas Trepte",
+      "license": "CC BY-SA 2.5",
+      "source": "https://commons.wikimedia.org/wiki/File:Apis_mellifera_Western_honey_bee.jpg"
+    }
+  },
+  "giant-panda": {
+    "path": "asset/img/quiz/giant-panda.jpg",
+    "credit": {
+      "file": "Grosser Panda.JPG",
+      "author": "J. Patrick Fischer",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Grosser_Panda.JPG"
+    }
+  },
+  "lion": {
+    "path": "asset/img/quiz/lion.jpg",
+    "credit": {
+      "file": "020 The lion king Snyggve in the Serengeti National Park Photo by Giles Laurent.jpg",
+      "author": "Giles Laurent",
+      "license": "CC BY-SA 4.0",
+      "source": "https://commons.wikimedia.org/wiki/File:020_The_lion_king_Snyggve_in_the_Serengeti_National_Park_Photo_by_Giles_Laurent.jpg"
+    }
+  },
+  "monarch-butterfly": {
+    "path": "asset/img/quiz/monarch-butterfly.jpg",
+    "credit": {
+      "file": "Monarch Butterfly Danaus plexippus Male 2664px.jpg",
+      "author": "Photo by and (c)2007 Derek Ramsey (Ram-Man)",
+      "license": "GFDL 1.2",
+      "source": "https://commons.wikimedia.org/wiki/File:Monarch_Butterfly_Danaus_plexippus_Male_2664px.jpg"
+    }
+  },
+  "koala": {
+    "path": "asset/img/quiz/koala.jpg",
+    "credit": {
+      "file": "Koala climbing tree.jpg",
+      "author": "Diliff",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Koala_climbing_tree.jpg"
+    }
+  },
+  "giraffe": {
+    "path": "asset/img/quiz/giraffe.jpg",
+    "credit": {
+      "file": "Giraffe Mikumi National Park.jpg",
+      "author": "Muhammad Mahdi Karim Facebook The making of this document was supported by Wikimedia CH. (Submit your project!) For all the files concerned, please see the category Supported by Wikimedia CH. العربية ∙ বাংলা ∙ čeština ∙ Deutsch ∙ English ∙ Esperanto ∙ español ∙ français ∙ galego ∙ हिन्दी ∙ magyar ∙ italiano ∙ 日本語 ∙ македонски ∙ Nederlands ∙ português do Brasil ∙ rumantsch ∙ русский ∙ sicilianu ∙ slovenščina ∙ தமிழ் ∙ українська ∙ 中文 ∙ +/−",
+      "license": "GFDL 1.2",
+      "source": "https://commons.wikimedia.org/wiki/File:Giraffe_Mikumi_National_Park.jpg"
+    }
+  },
+  "dromedary": {
+    "path": "asset/img/quiz/dromedary.jpg",
+    "credit": {
+      "file": "Camelus dromedarius in Nuweiba.jpg",
+      "author": "Florian Prischl",
+      "license": "CC BY-SA 3.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Camelus_dromedarius_in_Nuweiba.jpg"
+    }
+  },
+  "frog": {
+    "path": "asset/img/quiz/frog.jpg",
+    "credit": {
+      "file": "Red-eyed Leaf Frog (49661076226).jpg",
+      "author": "Charlie Jackson",
+      "license": "CC BY 2.0",
+      "source": "https://commons.wikimedia.org/wiki/File:Red-eyed_Leaf_Frog_(49661076226).jpg"
+    }
+  }
+}

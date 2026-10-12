@@ -1,0 +1,172 @@
+{
+  "questions": [
+    {
+      "question": "I am a bird, but I swim instead of fly. Who am I?",
+      "answers": [
+        "Owl",
+        "Parrot",
+        "Eagle",
+        "Penguin"
+      ],
+      "correctIndex": 3,
+      "fact": "Emperor penguin dads keep the egg warm on their feet!",
+      "subject": "Emperor penguin",
+      "imageUrl": "asset/img/quiz/emperor-penguin.jpg",
+      "imageCredit": {
+        "file": "Aptenodytes forsteri -Snow Hill Island, Antarctica -adults and juvenile-8.jpg",
+        "author": "Ian Duffy from UK",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Aptenodytes_forsteri_-Snow_Hill_Island,_Antarctica_-adults_and_juvenile-8.jpg"
+      }
+    },
+    {
+      "question": "I am the fastest runner on land. Who am I?",
+      "answers": [
+        "Cheetah",
+        "Horse",
+        "Lion",
+        "Rabbit"
+      ],
+      "correctIndex": 0,
+      "fact": "A cheetah can run as fast as a car on the highway!",
+      "subject": "Cheetah",
+      "imageUrl": "asset/img/quiz/cheetah.jpg",
+      "imageCredit": {
+        "file": "Male cheetah facing left in South Africa.jpg",
+        "author": "AfricanConservation",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Male_cheetah_facing_left_in_South_Africa.jpg"
+      }
+    },
+    {
+      "question": "I am a pink bird that often stands on one leg. Who am I?",
+      "answers": [
+        "Parrot",
+        "Flamingo",
+        "Peacock",
+        "Swan"
+      ],
+      "correctIndex": 1,
+      "fact": "Flamingos are pink because of the food they eat!",
+      "subject": "American flamingo",
+      "imageUrl": "asset/img/quiz/american-flamingo.jpg",
+      "imageCredit": {
+        "file": "American Flamingo JG.jpg",
+        "author": "JeffreyGammon",
+        "license": "CC BY 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:American_Flamingo_JG.jpg"
+      }
+    },
+    {
+      "question": "I start life as a tadpole and love to jump. Who am I?",
+      "answers": [
+        "Lizard",
+        "Fish",
+        "Frog",
+        "Rabbit"
+      ],
+      "correctIndex": 2,
+      "fact": "Frogs drink water through their skin!",
+      "subject": "Frog",
+      "imageUrl": "asset/img/quiz/frog.jpg",
+      "imageCredit": {
+        "file": "Red-eyed Leaf Frog (49661076226).jpg",
+        "author": "Charlie Jackson",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Red-eyed_Leaf_Frog_(49661076226).jpg"
+      }
+    },
+    {
+      "question": "I look like a horse with black and white stripes. Who am I?",
+      "answers": [
+        "Panda",
+        "Donkey",
+        "Cow",
+        "Zebra"
+      ],
+      "correctIndex": 3,
+      "fact": "Zebras can sleep standing up!",
+      "subject": "Plains zebra",
+      "imageUrl": "asset/img/quiz/plains-zebra.jpg",
+      "imageCredit": {
+        "file": "Equus quagga burchellii - Etosha, 2014.jpg",
+        "author": "Yathin S Krishnappa",
+        "license": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Equus_quagga_burchellii_-_Etosha,_2014.jpg"
+      }
+    },
+    {
+      "question": "I have a long trunk and big floppy ears. Who am I?",
+      "answers": [
+        "Rhino",
+        "Elephant",
+        "Giraffe",
+        "Hippo"
+      ],
+      "correctIndex": 1,
+      "fact": "Elephants use their trunks to drink, smell, and say hello!",
+      "subject": "African bush elephant",
+      "imageUrl": "asset/img/quiz/african-bush-elephant.jpg",
+      "imageCredit": {
+        "file": "178 Male African bush elephant in Etosha National Park Photo by Giles Laurent.jpg",
+        "author": "Giles Laurent",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:178_Male_African_bush_elephant_in_Etosha_National_Park_Photo_by_Giles_Laurent.jpg"
+      }
+    },
+    {
+      "question": "I hoot at night and can turn my head really far. Who am I?",
+      "answers": [
+        "Bat",
+        "Crow",
+        "Owl",
+        "Chicken"
+      ],
+      "correctIndex": 2,
+      "fact": "Owls can turn their heads three-quarters of the way around!",
+      "subject": "Great horned owl",
+      "imageUrl": "asset/img/quiz/great-horned-owl.jpg",
+      "imageCredit": {
+        "file": "Bubo virginianus 06.jpg",
+        "author": "Greg Hume",
+        "license": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Bubo_virginianus_06.jpg"
+      }
+    },
+    {
+      "question": "I have eight arms and can squirt ink. Who am I?",
+      "answers": [
+        "Octopus",
+        "Jellyfish",
+        "Starfish",
+        "Turtle"
+      ],
+      "correctIndex": 0,
+      "fact": "An octopus has three hearts!",
+      "subject": "Common octopus",
+      "imageUrl": "asset/img/quiz/common-octopus.jpg",
+      "imageCredit": {
+        "file": "Octopus2.jpg",
+        "author": "albert kok",
+        "license": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Octopus2.jpg"
+      }
+    }
+  ],
+  "timing": {
+    "questionSeconds": 10,
+    "revealDurationMs": 3500,
+    "introDelayMs": 3000,
+    "urgentThresholdSeconds": 3
+  },
+  "content": {
+    "intro": {
+      "title": "Guess the Animal Quiz",
+      "message": "Can you guess them all?"
+    },
+    "final": {
+      "title": "Great guessing!",
+      "message": "How many did you get right?"
+    }
+  }
+}

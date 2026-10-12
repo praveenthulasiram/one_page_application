@@ -1,256 +1,179 @@
-# One Page Quiz Application
+# Kids Quiz Video Maker
 
-Frontend quiz renderer + Python quiz-data generation pipeline.
+Turns quiz datasets (JSON) into YouTube-ready videos for kids: an auto-playing quiz page
+rendered in headless Chromium, with a narrator voice, sound effects, a thumbnail and a
+ready-to-paste description.
 
-The frontend (`index.html`, `index2.html` + `asset/js/quiz-engine.js`) **does not generate questions**. It only renders dataset JSON files.
+```
+tools/quiz_data_generator.py  ->  asset/data/quizzes/<topic>/<topic>-NNN.json  ->  tools/record_video.js  ->  output/<name>/
+       (questions + images)              (reviewable data)                          (headless render)          mp4, thumbnail, description
+```
 
----
-
-## 1) Project Overview
-
-- Render a quiz screen from dataset JSON.
-- Keep question generation in Python for easier maintenance and review.
-- Organize datasets by topic under `asset/data/quizzes/`.
-- Support automation by passing dataset file in page query param:
-  - `index.html?dataset=asset/data/quizzes/python/python-001.json`
+The page (`index.html` + `asset/js/quiz-engine.js`) never invents content; it only plays a dataset.
 
 ---
 
-## 2) Folder Structure
+## 1) Setup (WSL / Ubuntu)
 
-- `index.html` — original UI shell
-- `index2.html` — modern hook + iframe quiz UI shell
-- `asset/js/quiz-engine.js` — quiz runtime logic
-- `asset/img/quiz-bg.gif` — animated background used by `index2.html`
-- `asset/data/quizzes/manifest.json` — dataset index + default
-- `asset/data/quizzes/<topic>/<topic>-NNN.json` — quiz datasets
-- `tools/quiz_data_generator.py` — reusable Python generator/manager CLI
-- `tools/render_cycle.ps1` — iterate dataset URLs for recording workflows
+Requirements: Python 3.10+, Node.js 18+ and [uv](https://docs.astral.sh/uv/).
+
+```bash
+npm install                                         # Playwright + a bundled ffmpeg
+npx playwright install chromium                     # headless browser (~120 MB, in ~/.cache/ms-playwright)
+sudo env "PATH=$PATH" npx playwright install-deps chromium   # one-time: Chromium's Linux libraries
+uv venv .venv && uv pip install --python .venv/bin/python piper-tts   # offline narrator voice
+```
+
+Voices download on first use into `.cache/voices/` (60–115 MB each); narration clips are cached
+in `.cache/narration/`, so re-rendering only synthesizes lines that changed.
 
 ---
 
-## 3) Dataset JSON Contract
+## 2) Make a video
 
-Each dataset file should be render-ready and include:
+```bash
+# 16:9 video for the main channel
+npm run record -- --dataset asset/data/quizzes/guess-the-animal/guess-the-animal-001.json
+
+# 9:16 YouTube Short (keeps content out of the Shorts caption/button overlay)
+npm run record -- --dataset asset/data/quizzes/guess-the-animal/guess-the-animal-001.json --format portrait
+
+# every dataset in the manifest
+npm run record -- --all
+```
+
+Output lands in `output/<dataset>-<format>/`:
+
+| File | Use |
+| --- | --- |
+| `<name>.mp4` | H.264 + AAC, 30 fps, 1080p — upload as is |
+| `thumbnail.jpg` | First question, before the answer is shown |
+| `description.txt` | Title, chapter timestamps and the **photo credits you must include** |
+
+Options:
+
+| Option | Default | Meaning |
+| --- | --- | --- |
+| `--format` | `landscape` | `landscape` (1920×1080) or `portrait` (1080×1920) |
+| `--final-hold` | `10` | Seconds to keep the end screen (room for YouTube end-screen elements) |
+| `--music <file.mp3>` | none | Background music, looped and faded out |
+| `--music-volume` | `0.12` | Music level under the sound effects |
+| `--voice` | `en_US-ljspeech-high` | Piper voice name (see "Narration" below) |
+| `--speech-rate` | `1.1` | Piper length scale: higher is slower (1.0 = natural speed) |
+| `--no-read-answers` | off | Read only the question, not "Is it A, B, C, or D?" |
+| `--no-voice` | off | Render without narration |
+| `--fps` | `30` | Output frame rate |
+| `--speed` | `0.5` | Slow-motion capture factor; `1` renders in real time (faster, but may be choppy) |
+| `--out` | `output` | Output folder |
+
+The page is captured in slow motion (`--speed 0.5`: timers and CSS animations run at half speed)
+and the video is sped back up, so motion stays smooth even on a slow or busy machine. A 2.5-minute
+quiz takes about 12 minutes to render; use `--speed 1` for quick drafts.
+
+### Narration
+
+The narrator reads the intro, each question with its choices, "The answer is …!" plus the fun fact,
+and the closing line. Timing stretches automatically so every line fits and kids still get
+3 seconds of thinking time after the choices are read. Sound effects and music duck under the voice.
+
+Voices with licences that allow use on a monetized channel:
+
+| Voice | Accent | Dataset licence |
+| --- | --- | --- |
+| `en_US-ljspeech-high` (default) | US | Public domain |
+| `en_US-kristin-medium` | US | Public domain |
+| `en_GB-cori-high` | British | Public domain |
+| `en_US-libritts_r-medium` | US (multi-speaker) | CC BY 4.0 — credit "LibriTTS-R" in the description |
+
+Avoid `en_US-lessac-*` and `en_US-hfc_female-*` for monetized videos: their datasets are non-commercial.
+Check the voice's `MODEL_CARD` on [rhasspy/piper-voices](https://huggingface.co/rhasspy/piper-voices) before adding others.
+
+---
+
+## 3) Preview in a browser
+
+```bash
+npm run serve
+```
+
+Then open `http://localhost:5500/index.html?dataset=asset/data/quizzes/guess-the-animal/guess-the-animal-001.json`.
+Click the intro screen once so the browser allows sound.
+
+---
+
+## 4) Create quiz content
+
+```bash
+# Offline: 3 files x 8 questions from the built-in curated animal bank (24 animals)
+python3 tools/quiz_data_generator.py generate --topic "Guess the Animal" --num-files 3 --questions-per-file 8
+
+# With an LLM (any OpenAI-compatible endpoint)
+export OPENAI_API_KEY=...
+python3 tools/quiz_data_generator.py generate --topic "Ocean Animals" --mode api \
+  --base-url https://api.openai.com/v1 --model gpt-4o-mini --num-files 2
+python3 tools/quiz_data_generator.py generate --topic "Space" --style general --mode api ...
+```
+
+What `generate` does:
+- Writes **new** files (`<topic>-004.json`, …); existing files are never overwritten, so manual edits are safe.
+- Shuffles answers so the correct option is spread across A–D (pass `--seed` for repeatable output).
+- Looks up each question's `subject` on Wikipedia, downloads the lead photo into `asset/img/quiz/`
+  and records author + licence in `imageCredit` (also cached in `asset/img/quiz/credits.json`).
+- Rebuilds `asset/data/quizzes/manifest.json` (`--make-default` makes the first new file the default).
+
+Other commands:
+
+```bash
+python3 tools/quiz_data_generator.py validate             # check every dataset is render-ready
+python3 tools/quiz_data_generator.py images --all         # fetch missing images
+python3 tools/quiz_data_generator.py shuffle <file.json>  # re-shuffle answer positions
+python3 tools/quiz_data_generator.py manifest             # rebuild manifest from disk
+python3 tools/quiz_data_generator.py list | urls
+```
+
+**Always review generated questions before publishing**: one wrong "fact" in a kids' video costs trust.
+
+---
+
+## 5) Dataset format
 
 ```json
 {
   "questions": [
     {
-      "question": "string",
-      "answers": ["A", "B", "C", "D"],
-      "correctIndex": 0,
-      "host": "optional short line",
-      "imageUrl": "optional iframe image URL"
+      "question": "I have eight arms and can squirt ink. Who am I?",
+      "answers": ["Jellyfish", "Octopus", "Starfish", "Turtle"],
+      "correctIndex": 1,
+      "fact": "An octopus has three hearts!",
+      "subject": "Common octopus",
+      "imageUrl": "asset/img/quiz/common-octopus.jpg",
+      "imageCredit": { "file": "...", "author": "...", "license": "CC BY-SA 4.0", "source": "https://commons.wikimedia.org/..." }
     }
   ],
-  "timing": {
-    "questionSeconds": 7,
-    "revealDurationMs": 2000,
-    "introDelayMs": 3000,
-    "urgentThresholdSeconds": 4,
-    "tickIntervalMs": 1000
-  },
+  "timing": { "questionSeconds": 10, "revealDurationMs": 3500, "introDelayMs": 3000, "urgentThresholdSeconds": 3 },
   "content": {
-    "intro": { "title": "Quiz", "message": "..." },
-    "final": { "title": "Quiz complete!", "message": "..." }
+    "intro": { "title": "Guess the Animal Quiz", "message": "Can you guess them all?" },
+    "final": { "title": "Great guessing!", "message": "How many did you get right?" }
   },
-  "theme": { "name": "primary-play" }
+  "theme": { "overrides": { "orange": "#ff5a8a" } }
 }
 ```
 
-Notes:
-- `questions` is required.
-- `answers` can have 3 or 4 options.
-- `correctIndex` must point to one valid answer.
-- `imageUrl` is optional and used by `index2.html` to populate the media iframe.
+- `questions` is required; each needs 3 or 4 `answers` and a valid `correctIndex`.
+- `fact` is shown in a banner when the answer is revealed (falls back to "It's <answer>!").
+- `imageUrl` may be a local path or an http(s) URL; questions without one hide the picture panel.
+- A question may carry its own `timing` (`questionSeconds`, `revealDurationMs`); the recorder uses this to fit narration.
+- `theme.overrides` sets CSS custom properties of `index.html` (e.g. `orange`, `option-yellow`, `frame-blue`).
+
+The page picks a dataset from `?dataset=<path>`, else the manifest's `defaultDataset`, else its first entry.
+`?record=1` makes the page silent and log timeline events for the recorder.
 
 ---
 
-## 4) How the Frontend Selects a Dataset
+## 6) Troubleshooting
 
-Selection order:
-1. `dataset` query parameter (if provided)
-2. `defaultDataset` in `asset/data/quizzes/manifest.json`
-3. first `datasets[]` entry in manifest
-4. fallback: `asset/data/quizzes/general/general-001.json`
-
-Examples:
-- `index.html?dataset=asset/data/quizzes/general/general-001.json`
-- `index.html?dataset=asset/data/quizzes/python/python-003.json`
-- `index2.html?dataset=asset/data/quizzes/general/general-001.json`
-
----
-
-## 5) Generate Quiz Data (Python)
-
-Script:
-- `tools/quiz_data_generator.py`
-
-### 5.1 Template mode (offline placeholders)
-
-```bash
-python tools/quiz_data_generator.py generate --topic Python --num-files 5 --questions-per-file 4 --question-seconds 7 --mode template
-```
-
-### 5.2 API mode (OpenAI-compatible)
-
-Set key first:
-
-```powershell
-$env:OPENAI_API_KEY="your_api_key_here"
-```
-
-Generate:
-
-```bash
-python tools/quiz_data_generator.py generate --topic Python --num-files 5 --questions-per-file 4 --question-seconds 7 --mode api --base-url https://api.openai.com/v1 --model gpt-4o-mini
-```
-
-What it does:
-- Creates topic folder if missing.
-- Writes files as `<topic>-001.json`, `<topic>-002.json`, etc.
-- Rebuilds `asset/data/quizzes/manifest.json`.
-
-### 5.3 Other generator commands
-
-```bash
-python tools/quiz_data_generator.py list
-python tools/quiz_data_generator.py manifest
-python tools/quiz_data_generator.py urls --page index.html
-```
-
-- `list`: print current manifest.
-- `manifest`: rebuild manifest from files on disk.
-- `urls`: print dataset URLs for render automation.
-
----
-
-## 6) Manual Review Workflow (Recommended)
-
-1. Generate datasets with Python.
-2. Open JSON files in `asset/data/quizzes/<topic>/`.
-3. Refine wording, options, and `correctIndex` manually.
-4. Re-run:
-
-```bash
-python tools/quiz_data_generator.py manifest
-```
-
-5. Render and validate via `dataset` param.
-
----
-
-## 7) How to Test `index.html` and `index2.html`
-
-### 7.1 Start a local server (recommended)
-
-From repository root:
-
-```bash
-python -m http.server 5500
-```
-
-Open in browser:
-- `http://localhost:5500/index.html`
-- `http://localhost:5500/index.html?dataset=asset/data/quizzes/python/python-001.json`
-- `http://localhost:5500/index2.html`
-- `http://localhost:5500/index2.html?dataset=asset/data/quizzes/python/python-001.json`
-
-### 7.2 What to verify
-
-- Page loads without `Quiz setup error`.
-- Selected dataset is rendered when `dataset` param changes.
-- Timer follows dataset value (`timing.questionSeconds`).
-- Theme/content overrides display correctly.
-- On `index2.html`, iframe media updates from `questions[].imageUrl` when present.
-
-### 7.3 One-command local start (PowerShell)
-
-Use the helper script to start the server and open the landing page automatically:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File tools/start_server.ps1
-```
-
-Common options:
-
-```powershell
-# Custom port
-powershell -ExecutionPolicy Bypass -File tools/start_server.ps1 -Port 5501
-
-# Open a specific dataset
-powershell -ExecutionPolicy Bypass -File tools/start_server.ps1 -Dataset "asset/data/quizzes/python/python-001.json"
-
-# Start without opening browser
-powershell -ExecutionPolicy Bypass -File tools/start_server.ps1 -NoOpen
-```
-
-The script prints a server PID. Stop the server with:
-
-```powershell
-Stop-Process -Id <PID>
-```
-
----
-
-## 8) Recording / Iteration Helper
-
-Script:
-- `tools/render_cycle.ps1`
-
-Examples:
-
-```powershell
-# Print dataset URLs from manifest
-powershell -ExecutionPolicy Bypass -File tools/render_cycle.ps1 -Mode print
-
-# Open each URL in default browser (for recording workflows)
-powershell -ExecutionPolicy Bypass -File tools/render_cycle.ps1 -Mode open -BaseUrl http://localhost:5500 -DelaySeconds 1
-
-# Start at index 1 and process only 3 datasets
-powershell -ExecutionPolicy Bypass -File tools/render_cycle.ps1 -Mode print -StartIndex 1 -Limit 3
-```
-
-Parameters:
-- `-ManifestPath` (default `asset/data/quizzes/manifest.json`)
-- `-PagePath` (default `index.html`)
-- `-BaseUrl` (optional, e.g. `http://localhost:5500`)
-- `-Mode` (`print` or `open`)
-- `-DelaySeconds` delay between opens in `open` mode
-- `-Limit` max datasets to process
-- `-StartIndex` starting dataset index
-
----
-
-## 9) Troubleshooting
-
-- **Quiz setup error**
-  - Ensure server is running (`python -m http.server 5500`).
-  - Confirm dataset path exists.
-  - Confirm JSON is valid.
-
-- **Dataset not found**
-  - Check `dataset` query param spelling.
-  - Rebuild manifest: `python tools/quiz_data_generator.py manifest`.
-
-- **API generation fails**
-  - Verify `OPENAI_API_KEY` is set.
-  - Verify `--base-url` and `--model`.
-  - Try `--mode template` to continue offline.
-
----
-
-## 10) Quick Start
-
-```bash
-python tools/quiz_data_generator.py generate --topic Python --num-files 5 --questions-per-file 4 --question-seconds 7 --mode template
-python -m http.server 5500
-```
-
-Open:
-
-- `http://localhost:5500/index.html?dataset=asset/data/quizzes/python/python-001.json`
-- `http://localhost:5500/index2.html?dataset=asset/data/quizzes/python/python-001.json`
-
-python tools/quiz_data_generator.py generate --topic "Generative Ai" --num-files 2 --questions-per-file 2 --question-seconds 7 --mode api
+- **`libnspr4.so: cannot open shared object file`** — run the `install-deps` command from Setup.
+- **"Quiz setup error" on the page** — the dataset path is wrong or the JSON is invalid; run `validate`.
+- **Image skipped for <subject>** — that Wikipedia article has no lead image; change `subject` to a nearby
+  article (e.g. "Frog") and run `images <file>`.
+- **API generation fails** — check `OPENAI_API_KEY`, `--base-url`, `--model`; template mode works offline.

@@ -1,159 +1,39 @@
 (() => {
   const DEFAULT_TIMING = {
-    questionSeconds: 12,
-    revealDurationMs: 2000,
+    questionSeconds: 10,
+    revealDurationMs: 3500,
     introDelayMs: 3000,
-    urgentThresholdSeconds: 4,
-    tickIntervalMs: 1000
+    urgentThresholdSeconds: 3
   };
   const DEFAULT_CONTENT = {
-    intro: {
-      title: "Quiz",
-      message: "Get ready for the first question."
-    },
-    final: {
-      title: "Thank you for watching.",
-      message: "If you enjoyed this content, please consider subscribing, liking, and supporting us for more similar content."
-    },
-    defaultHostLine: "Choose your answer before time runs out.",
-    timeUpHostLine: "Time up! Correct answer highlighted.",
-    completeHostLine: "All questions completed. Well done!"
+    intro: { title: "Quiz", message: "Get ready for the first question." },
+    final: { title: "Great job!", message: "How many did you get right?" }
   };
   const DEFAULT_SOUND_PATHS = {
     ticking: "asset/sound/clock-tick.mp3",
     applause: "asset/sound/applause.mp3",
     cheers: "asset/sound/cheers.mp3"
   };
-  const DEFAULT_THEME_NAME = "primary-play";
-  const THEME_PRESETS = {
-    "primary-play": {
-      "--page-bg": "#f2f7ff",
-      "--shell-border": "#15325f",
-      "--shell-bg-1": "#ffffff",
-      "--shell-bg-2": "#eef7ff",
-      "--decor-1": "rgba(17, 138, 245, 0.14)",
-      "--decor-2": "rgba(255, 56, 96, 0.13)",
-      "--question-bg-1": "#ffffff",
-      "--question-bg-2": "#f2f8ff",
-      "--answers-bg": "#eff6ff",
-      "--intro-bg-1": "rgba(17, 138, 245, 0.15)",
-      "--intro-bg-2": "rgba(255, 214, 31, 0.18)",
-      "--final-bg-1": "rgba(43, 214, 110, 0.13)",
-      "--final-bg-2": "rgba(17, 138, 245, 0.14)",
-      "--text-main": "#12213f",
-      "--text-subtle": "#2f4f82",
-      "--question-emphasis": "#ffd41f",
-      "--question-emphasis-text": "#12213f",
-      "--pill-bg": "#1f4ea8",
-      "--pill-text": "#ffffff",
-      "--intro-badge-bg": "#ffe36b",
-      "--intro-badge-text": "#112a54",
-      "--final-badge-bg": "#8ff0b9",
-      "--final-badge-text": "#0d4a2a",
-      "--answer-bg-1": "#ffffff",
-      "--answer-bg-2": "#d9edff",
-      "--answer-border": "#2274f4",
-      "--answer-text": "#11315e",
-      "--answer-hover-shadow": "rgba(34, 116, 244, 0.27)",
-      "--timer-wrap-bg": "rgba(255, 255, 255, 0.96)",
-      "--timer-wrap-border": "#c6dbff",
-      "--timer-label": "#163465",
-      "--progress-bg": "#dbe8fb",
-      "--timer-bar-start": "#1f83ff",
-      "--timer-bar-end": "#165df0",
-      "--timer-urgent-start": "#ff5f4d",
-      "--timer-urgent-end": "#f11d3c",
-      "--urgent-shadow-1": "rgba(241, 29, 60, 0.2)",
-      "--urgent-shadow-2": "rgba(241, 29, 60, 0.28)",
-      "--feedback-correct": "#22b65f",
-      "--feedback-correct-text": "#ffffff",
-      "--feedback-incorrect": "#f11d3c"
-    },
-    "soft-pastel": {
-      "--page-bg": "#f5f8ff",
-      "--shell-border": "#5f7196",
-      "--shell-bg-1": "#ffffff",
-      "--shell-bg-2": "#f2fbff",
-      "--decor-1": "rgba(120, 196, 255, 0.16)",
-      "--decor-2": "rgba(254, 189, 230, 0.16)",
-      "--question-bg-1": "#ffffff",
-      "--question-bg-2": "#f7fdff",
-      "--answers-bg": "#f2fbff",
-      "--intro-bg-1": "rgba(120, 196, 255, 0.2)",
-      "--intro-bg-2": "rgba(255, 240, 164, 0.21)",
-      "--final-bg-1": "rgba(159, 239, 200, 0.2)",
-      "--final-bg-2": "rgba(158, 214, 255, 0.2)",
-      "--text-main": "#26354f",
-      "--text-subtle": "#4f668a",
-      "--question-emphasis": "#fff3a8",
-      "--question-emphasis-text": "#2d3650",
-      "--pill-bg": "#6589c9",
-      "--pill-text": "#ffffff",
-      "--intro-badge-bg": "#ffe8b2",
-      "--intro-badge-text": "#37445b",
-      "--final-badge-bg": "#b8f4d0",
-      "--final-badge-text": "#2f5845",
-      "--answer-bg-1": "#ffffff",
-      "--answer-bg-2": "#e9f7ff",
-      "--answer-border": "#6fa3ea",
-      "--answer-text": "#2d466d",
-      "--answer-hover-shadow": "rgba(111, 163, 234, 0.27)",
-      "--timer-wrap-bg": "rgba(255, 255, 255, 0.97)",
-      "--timer-wrap-border": "#d1dff5",
-      "--timer-label": "#3e567e",
-      "--progress-bg": "#e4edfa",
-      "--timer-bar-start": "#76beff",
-      "--timer-bar-end": "#5e98f0",
-      "--timer-urgent-start": "#ff7a74",
-      "--timer-urgent-end": "#f24f5d",
-      "--urgent-shadow-1": "rgba(242, 79, 93, 0.2)",
-      "--urgent-shadow-2": "rgba(242, 79, 93, 0.26)",
-      "--feedback-correct": "#2dc171",
-      "--feedback-correct-text": "#ffffff",
-      "--feedback-incorrect": "#f24f5d"
-    },
-    "dark-focus": {
-      "--page-bg": "#120d22",
-      "--shell-border": "#4634b2",
-      "--shell-bg-1": "#1a1236",
-      "--shell-bg-2": "#120c28",
-      "--decor-1": "rgba(0, 255, 249, 0.2)",
-      "--decor-2": "rgba(255, 68, 234, 0.2)",
-      "--question-bg-1": "#241b4a",
-      "--question-bg-2": "#1a1335",
-      "--answers-bg": "#130f2b",
-      "--intro-bg-1": "rgba(255, 68, 234, 0.22)",
-      "--intro-bg-2": "rgba(0, 255, 249, 0.2)",
-      "--final-bg-1": "rgba(45, 211, 126, 0.21)",
-      "--final-bg-2": "rgba(0, 255, 249, 0.2)",
-      "--text-main": "#f8fbff",
-      "--text-subtle": "#c9d5ff",
-      "--question-emphasis": "#ffe44a",
-      "--question-emphasis-text": "#1a1335",
-      "--pill-bg": "#00e8ff",
-      "--pill-text": "#0c1436",
-      "--intro-badge-bg": "#ff6bed",
-      "--intro-badge-text": "#260d38",
-      "--final-badge-bg": "#85ffba",
-      "--final-badge-text": "#083623",
-      "--answer-bg-1": "#2b2153",
-      "--answer-bg-2": "#201744",
-      "--answer-border": "#00d9ff",
-      "--answer-text": "#f5fbff",
-      "--answer-hover-shadow": "rgba(0, 217, 255, 0.36)",
-      "--timer-wrap-bg": "rgba(31, 23, 62, 0.96)",
-      "--timer-wrap-border": "#5a4ac8",
-      "--timer-label": "#dce5ff",
-      "--progress-bg": "#362c65",
-      "--timer-bar-start": "#00e8ff",
-      "--timer-bar-end": "#53a0ff",
-      "--timer-urgent-start": "#ff6f66",
-      "--timer-urgent-end": "#ff2e52",
-      "--urgent-shadow-1": "rgba(255, 46, 82, 0.24)",
-      "--urgent-shadow-2": "rgba(255, 46, 82, 0.34)",
-      "--feedback-correct": "#37d879",
-      "--feedback-correct-text": "#0d1d17",
-      "--feedback-incorrect": "#ff2e52"
+  const DEFAULT_MANIFEST_PATH = "asset/data/quizzes/manifest.json";
+  const TIMER_REFRESH_MS = 100;
+  const TRANSITION_MS = 260;
+  const PRELOAD_TIMEOUT_MS = 10000;
+
+  const params = new URLSearchParams(window.location.search);
+  // Record mode: the video recorder mixes sound itself, so the page stays silent and logs timeline events instead.
+  const recordMode = params.get("record") === "1";
+  // ?speed=0.5 plays the whole quiz in slow motion; the recorder captures it slowly for more frames
+  // per video second and speeds the result back up. CSS animations are slowed by the recorder via DevTools.
+  const speed = Math.min(1, Math.max(0.1, Number(params.get("speed")) || 1));
+  const scaled = (ms) => ms / speed;
+  const recorder = { recordMode, events: [], done: false };
+  window.quizRecorder = recorder;
+  const emit = (type, detail = {}) => {
+    const event = { type, time: Date.now(), ...detail };
+    recorder.events.push(event);
+    // Exposed by tools/record_video.js so the recorder sees events the moment they happen.
+    if (typeof window.__quizEvent === "function") {
+      window.__quizEvent(event);
     }
   };
 
@@ -162,142 +42,92 @@
     return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
   };
 
-  const normalizeQuestions = (questions, answerSlots) => {
-    if (!Array.isArray(questions)) {
-      return [];
-    }
-
-    return questions
-      .map((item) => {
-        const answers = Array.isArray(item?.answers) ? item.answers.slice(0, answerSlots) : [];
-        const correctIndex = Number.isInteger(item?.correctIndex) ? item.correctIndex : -1;
-
-        return {
-          question: String(item?.question ?? "").trim(),
-          answers,
-          correctIndex,
-          host: String(item?.host ?? "").trim(),
-          imageUrl: String(item?.imageUrl ?? "").trim()
-        };
-      })
-      .filter((item) => item.question && item.answers.length > 0 && item.correctIndex >= 0 && item.correctIndex < item.answers.length);
-  };
-
+  // Allow http(s) and same-site relative paths; reject javascript:, data: and other schemes.
   const sanitizeMediaUrl = (value) => {
     const source = String(value ?? "").trim();
     if (!source) {
       return "";
     }
-    if (source.startsWith("http://") || source.startsWith("https://") || source.startsWith("/") || source.startsWith("./") || source.startsWith("../")) {
+    if (/^https?:\/\//i.test(source) || !/^[a-z][a-z0-9+.-]*:/i.test(source)) {
       return source;
     }
     return "";
   };
 
-  const buildImageOnlyIframeDoc = (imageUrl) => {
-    const escapedUrl = String(imageUrl ?? "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;");
-    return `<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:linear-gradient(180deg,#dff3ff,#bfe8ff)}.frame{width:100%;height:100%;padding:1.6%;display:grid;place-items:center}.frame img{width:100%;height:100%;object-fit:contain;display:block;border-radius:10px;}</style></head><body><div class="frame"><img src="${escapedUrl}" alt="Quiz visual" referrerpolicy="no-referrer"/></div></body></html>`;
-  };
-
-  const mergeContent = (content) => {
-    return {
-      intro: {
-        title: content?.intro?.title ?? DEFAULT_CONTENT.intro.title,
-        message: content?.intro?.message ?? DEFAULT_CONTENT.intro.message
-      },
-      final: {
-        title: content?.final?.title ?? DEFAULT_CONTENT.final.title,
-        message: content?.final?.message ?? DEFAULT_CONTENT.final.message
-      },
-      defaultHostLine: content?.defaultHostLine ?? DEFAULT_CONTENT.defaultHostLine,
-      timeUpHostLine: content?.timeUpHostLine ?? DEFAULT_CONTENT.timeUpHostLine,
-      completeHostLine: content?.completeHostLine ?? DEFAULT_CONTENT.completeHostLine
-    };
-  };
-
-  const resolveTheme = (themeConfig) => {
-    const requestedName = String(themeConfig?.name ?? DEFAULT_THEME_NAME).trim().toLowerCase();
-    const themeName = THEME_PRESETS[requestedName] ? requestedName : DEFAULT_THEME_NAME;
-    const baseTokens = THEME_PRESETS[themeName];
-    const rawOverrides = themeConfig?.overrides && typeof themeConfig.overrides === "object" ? themeConfig.overrides : {};
-    const normalizedOverrides = Object.entries(rawOverrides).reduce((accumulator, [key, value]) => {
-      const tokenKey = String(key || "").trim();
-      if (!tokenKey) {
-        return accumulator;
-      }
-      const cssToken = tokenKey.startsWith("--") ? tokenKey : `--${tokenKey}`;
-      accumulator[cssToken] = String(value);
-      return accumulator;
-    }, {});
-
-    return {
-      name: themeName,
-      tokens: {
-        ...baseTokens,
-        ...normalizedOverrides
-      }
-    };
-  };
-
-  const applyThemeTokens = (themeTarget, resolvedTheme) => {
-    if (!themeTarget || !resolvedTheme) {
-      return;
+  const normalizeQuestions = (questions, answerSlots) => {
+    if (!Array.isArray(questions)) {
+      return [];
     }
-    themeTarget.dataset.theme = resolvedTheme.name;
-    Object.entries(resolvedTheme.tokens).forEach(([token, value]) => {
-      themeTarget.style.setProperty(token, value);
+    return questions
+      .map((item) => ({
+        question: String(item?.question ?? "").trim(),
+        answers: Array.isArray(item?.answers) ? item.answers.slice(0, answerSlots).map((answer) => String(answer)) : [],
+        correctIndex: Number.isInteger(item?.correctIndex) ? item.correctIndex : -1,
+        fact: String(item?.fact ?? "").trim(),
+        imageUrl: sanitizeMediaUrl(item?.imageUrl),
+        // Optional per-question timing, e.g. set by the recorder so narration always fits.
+        questionSeconds: toPositiveNumber(item?.timing?.questionSeconds, 0),
+        revealDurationMs: toPositiveNumber(item?.timing?.revealDurationMs, 0)
+      }))
+      .filter((item) => item.question && item.answers.length > 0 && item.correctIndex >= 0 && item.correctIndex < item.answers.length);
+  };
+
+  const mergeContent = (content) => ({
+    intro: {
+      title: content?.intro?.title ?? DEFAULT_CONTENT.intro.title,
+      message: content?.intro?.message ?? DEFAULT_CONTENT.intro.message
+    },
+    final: {
+      title: content?.final?.title ?? DEFAULT_CONTENT.final.title,
+      message: content?.final?.message ?? DEFAULT_CONTENT.final.message
+    }
+  });
+
+  // Datasets may override any CSS custom property on the page, e.g. { "theme": { "overrides": { "orange": "#ff5a8a" } } }.
+  const applyThemeOverrides = (themeConfig) => {
+    const overrides = themeConfig?.overrides && typeof themeConfig.overrides === "object" ? themeConfig.overrides : {};
+    Object.entries(overrides).forEach(([key, value]) => {
+      const token = String(key || "").trim();
+      if (token) {
+        document.documentElement.style.setProperty(token.startsWith("--") ? token : `--${token}`, String(value));
+      }
     });
   };
 
-  const DEFAULT_MANIFEST_PATH = "asset/data/quizzes/manifest.json";
-  const DEFAULT_DATASET_PATH = "asset/data/quizzes/general/general-001.json";
+  const preloadImage = (url) =>
+    new Promise((resolve) => {
+      const image = new Image();
+      image.onload = image.onerror = () => resolve();
+      image.src = url;
+    });
 
-  const getDatasetPathFromQuery = () => {
-    const params = new URLSearchParams(window.location.search);
-    const datasetPath = (params.get("dataset") || "").trim();
-    return datasetPath || null;
+  // Wait for fonts and every clue image so no frame of a recording shows a half-loaded screen.
+  const preloadAssets = (questionBank) => {
+    const images = [...new Set(questionBank.map((item) => item.imageUrl).filter(Boolean))];
+    const loads = Promise.all([document.fonts?.ready, ...images.map(preloadImage)]);
+    return Promise.race([loads, new Promise((resolve) => setTimeout(resolve, PRELOAD_TIMEOUT_MS))]);
   };
 
   const fetchJson = async (path) => {
     const response = await fetch(path, { cache: "no-store" });
     if (!response.ok) {
-      throw new Error(`http_${response.status}`);
+      throw new Error(`http_${response.status} for ${path}`);
     }
     return response.json();
   };
 
+  // Selection order: ?dataset= query param, then manifest default, then the first manifest entry.
   const resolveDatasetPath = async () => {
-    const requestedPath = getDatasetPathFromQuery();
-    if (requestedPath) {
-      return requestedPath;
+    const requested = (params.get("dataset") || "").trim();
+    if (requested) {
+      return requested;
     }
-
-    try {
-      const manifest = await fetchJson(DEFAULT_MANIFEST_PATH);
-      if (typeof manifest?.defaultDataset === "string" && manifest.defaultDataset.trim()) {
-        return manifest.defaultDataset.trim();
-      }
-      if (Array.isArray(manifest?.datasets) && manifest.datasets.length > 0) {
-        const firstPath = String(manifest.datasets[0]?.path || "").trim();
-        if (firstPath) {
-          return firstPath;
-        }
-      }
-    } catch (_error) {
+    const manifest = await fetchJson(DEFAULT_MANIFEST_PATH);
+    const fallback = manifest?.defaultDataset || manifest?.datasets?.[0]?.path;
+    if (!fallback) {
+      throw new Error("manifest lists no datasets");
     }
-
-    return DEFAULT_DATASET_PATH;
-  };
-
-  const loadQuizConfigFromDataset = async () => {
-    const datasetPath = await resolveDatasetPath();
-    const datasetConfig = await fetchJson(datasetPath);
-    window.activeQuizDatasetPath = datasetPath;
-    return datasetConfig;
+    return String(fallback).trim();
   };
 
   let activeCleanup = null;
@@ -308,402 +138,268 @@
       activeCleanup = null;
     }
 
-    const timerBar = document.getElementById("timerBar");
-    const timerText = document.getElementById("timerText");
+    const byId = (id) => document.getElementById(id);
+    const timerBar = byId("timerBar");
+    const timerText = byId("timerText");
     const progressEl = document.querySelector(".progress");
     const timerWrap = document.querySelector(".timer-wrap");
     const quizShell = document.querySelector(".quiz-shell");
-    const introScreen = document.getElementById("introScreen");
-    const introTitle = document.getElementById("introTitle");
-    const introMessage = document.getElementById("introMessage");
-    const finalScreen = document.getElementById("finalScreen");
-    const finalTitle = document.getElementById("finalTitle");
-    const finalMessage = document.getElementById("finalMessage");
-    const questionText = document.getElementById("questionText");
-    const questionPill = document.getElementById("questionPill");
-    const hostLine = document.getElementById("hostLine");
-    const questionMediaFrame = document.getElementById("questionMediaFrame");
-    const answerButtons = [0, 1, 2, 3].map((index) => document.getElementById(`answer${index}`)).filter(Boolean);
-    const questionPillMode = String(quizShell?.dataset?.questionPill || "").trim().toLowerCase();
-    const defaultQuestionImageUrl = sanitizeMediaUrl(quizShell?.dataset?.defaultImageUrl);
+    const introScreen = byId("introScreen");
+    const finalScreen = byId("finalScreen");
+    const questionText = byId("questionText");
+    const questionPill = byId("questionPill");
+    const hostLine = byId("hostLine");
+    const mediaImage = byId("questionMediaFrame");
+    const answerButtons = [0, 1, 2, 3].map((index) => byId(`answer${index}`)).filter(Boolean);
+    const numberOnlyPill = String(quizShell?.dataset?.questionPill || "").trim().toLowerCase() === "number-only";
 
     if (!timerBar || !timerText || !progressEl || !timerWrap || !quizShell || !questionText || !questionPill || !hostLine || answerButtons.length === 0) {
       return { ok: false, reason: "missing_dom_elements" };
     }
 
-    const mergedTiming = {
+    const timing = {
       questionSeconds: toPositiveNumber(config?.timing?.questionSeconds, DEFAULT_TIMING.questionSeconds),
       revealDurationMs: toPositiveNumber(config?.timing?.revealDurationMs, DEFAULT_TIMING.revealDurationMs),
       introDelayMs: toPositiveNumber(config?.timing?.introDelayMs, DEFAULT_TIMING.introDelayMs),
-      urgentThresholdSeconds: toPositiveNumber(config?.timing?.urgentThresholdSeconds, DEFAULT_TIMING.urgentThresholdSeconds),
-      tickIntervalMs: toPositiveNumber(config?.timing?.tickIntervalMs, DEFAULT_TIMING.tickIntervalMs)
+      urgentThresholdSeconds: toPositiveNumber(config?.timing?.urgentThresholdSeconds, DEFAULT_TIMING.urgentThresholdSeconds)
     };
-    const mergedContent = mergeContent(config?.content);
+    const content = mergeContent(config?.content);
     const questionBank = normalizeQuestions(config?.questions, answerButtons.length);
-    const mergedTheme = resolveTheme(config?.theme);
-    applyThemeTokens(document.documentElement, mergedTheme);
-    applyThemeTokens(quizShell, mergedTheme);
+    applyThemeOverrides(config?.theme);
+
+    const setText = (id, text) => {
+      const element = byId(id);
+      if (element) {
+        element.textContent = text;
+      }
+    };
+    setText("introTitle", content.intro.title);
+    setText("introMessage", content.intro.message);
+    setText("finalTitle", content.final.title);
+    setText("finalMessage", content.final.message);
 
     if (questionBank.length === 0) {
-      questionPill.textContent = "Quiz not initialized";
-      hostLine.textContent = "Call window.initializeQuiz({ questions, timing }) with a valid question set.";
-      if (introTitle) {
-        introTitle.textContent = mergedContent.intro.title;
-      }
-      if (introMessage) {
-        introMessage.textContent = mergedContent.intro.message;
-      }
+      emit("error", { reason: "no_questions" });
       return { ok: false, reason: "no_questions" };
     }
 
-    const soundPaths = {
-      ...DEFAULT_SOUND_PATHS,
-      ...(config?.sounds || {})
-    };
-    const sounds = {
-      ticking: new Audio(soundPaths.ticking),
-      applause: new Audio(soundPaths.applause),
-      cheers: new Audio(soundPaths.cheers)
-    };
+    const soundPaths = { ...DEFAULT_SOUND_PATHS, ...(config?.sounds || {}) };
+    const sounds = Object.fromEntries(
+      Object.entries(soundPaths).map(([name, path]) => {
+        const audio = new Audio(path);
+        audio.preload = "auto";
+        audio.muted = recordMode;
+        return [name, audio];
+      })
+    );
     sounds.ticking.loop = true;
-    Object.values(sounds).forEach((sound) => {
-      sound.preload = "auto";
-    });
 
-    let remaining = mergedTiming.questionSeconds;
     let questionIndex = 0;
-    let revealDone = false;
-    let quizCompleted = false;
-    let isRevealing = false;
+    let deadline = 0;
+    let phase = "intro"; // intro -> question -> reveal -> ... -> final
     let audioReady = false;
-    let quizStarted = false;
     let timerInterval;
     let revealTimeout;
     let introTimeout;
     const disposers = [];
 
-    const playSound = (sound, { restart = false } = {}) => {
-      if (!sound) {
-        return;
-      }
-      if (restart) {
-        sound.pause();
-        sound.currentTime = 0;
-      }
-      sound.play().catch(() => {});
-    };
-
-    const stopSound = (sound) => {
-      if (!sound) {
+    const playSound = (sound) => {
+      if (recordMode || !sound) {
         return;
       }
       sound.pause();
       sound.currentTime = 0;
+      sound.play().catch(() => {});
     };
 
-    const stopAllSounds = () => {
-      Object.values(sounds).forEach((sound) => {
-        stopSound(sound);
-      });
+    const stopSound = (sound) => {
+      sound.pause();
+      sound.currentTime = 0;
     };
 
-    const startTicking = () => {
-      stopSound(sounds.applause);
-      stopSound(sounds.cheers);
-      playSound(sounds.ticking, { restart: true });
-    };
+    const stopAllSounds = () => Object.values(sounds).forEach(stopSound);
 
-    const syncTickingWithState = () => {
-      if (quizCompleted || isRevealing || remaining <= 0) {
-        return;
-      }
-      if (sounds.ticking.paused) {
-        startTicking();
-      }
-    };
-
+    // Browsers block audio until the first user gesture; play each sound muted once to unlock it.
     const unlockAudio = async () => {
-      if (audioReady) {
+      if (audioReady || recordMode) {
         return;
       }
+      audioReady = true;
       for (const sound of Object.values(sounds)) {
         try {
           sound.muted = true;
-          sound.currentTime = 0;
           await sound.play();
         } catch (_error) {
         }
-        sound.pause();
-        sound.currentTime = 0;
+        stopSound(sound);
         sound.muted = false;
       }
-      audioReady = true;
-      if (!quizCompleted && !isRevealing && remaining > 0) {
-        syncTickingWithState();
+      if (phase === "question") {
+        playSound(sounds.ticking);
       }
     };
 
-    const addWindowListener = (type, handler, options) => {
-      window.addEventListener(type, handler, options);
-      disposers.push(() => window.removeEventListener(type, handler, options));
-    };
-
-    const attachAudioFallbackUnlock = () => {
-      const pointerOptions = { once: true, passive: true };
-      addWindowListener("pointerdown", unlockAudio, pointerOptions);
-      addWindowListener("touchstart", unlockAudio, pointerOptions);
-      addWindowListener("keydown", unlockAudio, { once: true });
-    };
-
-    const clearAnswerState = () => {
-      answerButtons.forEach((button) => {
-        button.classList.remove("is-correct");
-        button.disabled = false;
-        button.hidden = false;
-      });
-    };
+    ["pointerdown", "touchstart", "keydown"].forEach((type) => {
+      window.addEventListener(type, unlockAudio, { once: true, passive: true });
+      disposers.push(() => window.removeEventListener(type, unlockAudio));
+    });
 
     const renderQuestion = () => {
       const current = questionBank[questionIndex];
       questionText.textContent = current.question;
-      hostLine.textContent = current.host || mergedContent.defaultHostLine;
-      questionPill.textContent = questionPillMode === "number-only" ? String(questionIndex + 1) : `Question ${questionIndex + 1} / ${questionBank.length}`;
-
-      if (questionMediaFrame instanceof HTMLIFrameElement) {
-        const questionImageUrl = sanitizeMediaUrl(current.imageUrl) || defaultQuestionImageUrl;
-        if (questionImageUrl) {
-          const mediaMode = String(questionMediaFrame.dataset?.mediaMode || "").trim().toLowerCase();
-          if (mediaMode === "image-only") {
-            questionMediaFrame.removeAttribute("src");
-            questionMediaFrame.srcdoc = buildImageOnlyIframeDoc(questionImageUrl);
-          } else {
-            questionMediaFrame.removeAttribute("srcdoc");
-            questionMediaFrame.src = questionImageUrl;
-          }
-        }
-      } else if (questionMediaFrame instanceof HTMLImageElement) {
-        const questionImageUrl = sanitizeMediaUrl(current.imageUrl) || defaultQuestionImageUrl;
-        if (questionImageUrl) {
-          questionMediaFrame.src = questionImageUrl;
-        }
+      hostLine.textContent = "";
+      questionPill.textContent = numberOnlyPill ? String(questionIndex + 1) : `Question ${questionIndex + 1} / ${questionBank.length}`;
+      quizShell.classList.toggle("no-media", !current.imageUrl);
+      if (mediaImage instanceof HTMLImageElement && current.imageUrl) {
+        mediaImage.src = current.imageUrl;
       }
 
       answerButtons.forEach((button, index) => {
-        const optionLabel = String.fromCharCode(65 + index);
         const answerText = current.answers[index];
+        button.classList.remove("is-correct");
         button.hidden = !answerText;
         button.disabled = !answerText;
-        const optionLabelEl = button.querySelector("[data-option-label]");
-        const optionTextEl = button.querySelector("[data-option-text]");
-        if (optionLabelEl && optionTextEl) {
-          optionLabelEl.textContent = optionLabel;
-          optionTextEl.textContent = answerText || "";
+        const labelEl = button.querySelector("[data-option-label]");
+        const textEl = button.querySelector("[data-option-text]");
+        const optionLabel = String.fromCharCode(65 + index);
+        if (labelEl && textEl) {
+          labelEl.textContent = optionLabel;
+          textEl.textContent = answerText || "";
         } else {
-          button.textContent = answerText ? `${optionLabel}. ${answerText}` : `${optionLabel}.`;
+          button.textContent = answerText ? `${optionLabel}. ${answerText}` : "";
         }
       });
     };
 
-    const revealAnswer = () => {
-      if (revealDone) {
-        return;
+    const currentQuestionSeconds = () => questionBank[questionIndex].questionSeconds || timing.questionSeconds;
+
+    const renderTimer = () => {
+      const remainingMs = Math.max(0, deadline - Date.now()) * speed;
+      const remainingSeconds = Math.ceil(remainingMs / 1000);
+      timerBar.style.width = `${(remainingMs / (currentQuestionSeconds() * 1000)) * 100}%`;
+      timerText.textContent = `${remainingSeconds}s`;
+      progressEl.setAttribute("aria-valuenow", String(remainingSeconds));
+      const urgent = remainingSeconds <= timing.urgentThresholdSeconds;
+      timerBar.classList.toggle("is-urgent", urgent);
+      timerWrap.classList.toggle("urgent", urgent);
+      return remainingMs;
+    };
+
+    const tick = () => {
+      if (phase === "question" && renderTimer() <= 0) {
+        beginReveal();
       }
-      const current = questionBank[questionIndex];
-      revealDone = true;
-
-      answerButtons.forEach((button, index) => {
-        button.disabled = true;
-        if (index === current.correctIndex) {
-          button.classList.add("is-correct");
-        }
-      });
-      hostLine.textContent = mergedContent.timeUpHostLine;
     };
 
-    const runTransition = () => {
-      quizShell.classList.add("is-transitioning");
-      setTimeout(() => {
-        quizShell.classList.remove("is-transitioning");
-      }, 260);
-    };
-
-    const nextQuestion = () => {
-      questionIndex += 1;
-      remaining = mergedTiming.questionSeconds;
-      revealDone = false;
-      isRevealing = false;
-      timerBar.classList.remove("is-urgent");
-      timerBar.classList.add("progress-bar-animated");
-      timerWrap.classList.remove("urgent");
-      clearAnswerState();
-      runTransition();
+    const startQuestion = () => {
+      phase = "question";
+      quizShell.classList.remove("is-revealing");
       renderQuestion();
-      setTimeout(() => {
-        syncTickingWithState();
-      }, 260);
+      deadline = Date.now() + scaled(currentQuestionSeconds() * 1000);
+      progressEl.setAttribute("aria-valuemax", String(currentQuestionSeconds()));
+      timerBar.classList.add("progress-bar-animated");
+      renderTimer();
+      playSound(sounds.ticking);
+      emit("question", { index: questionIndex });
     };
 
     const completeQuiz = () => {
-      if (quizCompleted) {
-        return;
-      }
-      quizCompleted = true;
-      isRevealing = false;
+      phase = "final";
       clearInterval(timerInterval);
-      clearTimeout(revealTimeout);
       stopAllSounds();
-      timerBar.classList.remove("progress-bar-animated");
-      timerWrap.classList.remove("urgent");
-      questionPill.textContent = questionPillMode === "number-only" ? String(questionBank.length) : `Completed ${questionBank.length} / ${questionBank.length}`;
-      timerText.textContent = "Done";
-      hostLine.textContent = mergedContent.completeHostLine;
-      playSound(sounds.cheers, { restart: true });
+      quizShell.classList.remove("is-revealing");
       quizShell.classList.add("is-final");
-      if (finalScreen) {
-        finalScreen.setAttribute("aria-hidden", "false");
-      }
+      finalScreen?.setAttribute("aria-hidden", "false");
+      playSound(sounds.cheers);
+      emit("final");
+      setTimeout(() => {
+        recorder.done = true;
+      }, scaled(TRANSITION_MS));
     };
 
-    const beginRevealPhase = () => {
-      if (isRevealing || quizCompleted) {
+    const beginReveal = () => {
+      if (phase !== "question") {
         return;
       }
-      isRevealing = true;
+      phase = "reveal";
       stopSound(sounds.ticking);
       timerBar.classList.remove("progress-bar-animated");
-      revealAnswer();
-      playSound(sounds.applause, { restart: true });
+      const current = questionBank[questionIndex];
+      answerButtons.forEach((button, index) => {
+        button.disabled = true;
+        button.classList.toggle("is-correct", index === current.correctIndex);
+      });
+      hostLine.textContent = current.fact || `It's ${current.answers[current.correctIndex]}!`;
+      quizShell.classList.add("is-revealing");
+      playSound(sounds.applause);
+      emit("reveal", { index: questionIndex });
 
-      clearTimeout(revealTimeout);
       revealTimeout = setTimeout(() => {
         stopSound(sounds.applause);
         if (questionIndex >= questionBank.length - 1) {
           completeQuiz();
           return;
         }
-        nextQuestion();
-      }, mergedTiming.revealDurationMs);
+        questionIndex += 1;
+        quizShell.classList.add("is-transitioning");
+        setTimeout(() => quizShell.classList.remove("is-transitioning"), scaled(TRANSITION_MS));
+        startQuestion();
+      }, scaled(current.revealDurationMs || timing.revealDurationMs));
     };
 
-    const tick = () => {
-      if (quizCompleted || isRevealing) {
+    const startQuiz = () => {
+      if (phase !== "intro") {
         return;
       }
-
-      const percent = Math.max(0, Math.round((remaining / mergedTiming.questionSeconds) * 100));
-      timerBar.style.width = `${percent}%`;
-      timerBar.textContent = "";
-      timerText.textContent = `${remaining}s`;
-      progressEl.setAttribute("aria-valuenow", String(remaining));
-      progressEl.setAttribute("aria-valuemax", String(mergedTiming.questionSeconds));
-
-      if (remaining <= mergedTiming.urgentThresholdSeconds) {
-        timerBar.classList.add("is-urgent");
-        timerWrap.classList.add("urgent");
-      }
-
-      if (remaining <= 0) {
-        beginRevealPhase();
-        return;
-      }
-
-      remaining -= 1;
-    };
-
-    const hideIntroAndStartQuiz = () => {
-      if (quizStarted) {
-        return;
-      }
-      quizStarted = true;
       clearTimeout(introTimeout);
       quizShell.classList.remove("is-intro");
-      if (introScreen) {
-        introScreen.setAttribute("aria-hidden", "true");
-      }
-      renderQuestion();
-      unlockAudio().finally(() => {
-        startTicking();
-        tick();
-        timerInterval = setInterval(tick, mergedTiming.tickIntervalMs);
-      });
+      introScreen?.setAttribute("aria-hidden", "true");
+      startQuestion();
+      timerInterval = setInterval(tick, TIMER_REFRESH_MS);
     };
 
     const destroy = () => {
+      phase = "destroyed";
       clearInterval(timerInterval);
       clearTimeout(revealTimeout);
       clearTimeout(introTimeout);
       stopAllSounds();
-      while (disposers.length > 0) {
-        const dispose = disposers.pop();
-        if (dispose) {
-          dispose();
-        }
-      }
+      disposers.splice(0).forEach((dispose) => dispose());
     };
+    activeCleanup = destroy;
 
-    timerBar.classList.add("progress-bar-animated");
-    timerBar.classList.remove("is-urgent");
-    timerWrap.classList.remove("urgent");
-    quizShell.classList.remove("is-final");
+    quizShell.classList.remove("is-final", "is-revealing");
     quizShell.classList.add("is-intro");
+    finalScreen?.setAttribute("aria-hidden", "true");
+    introScreen?.setAttribute("aria-hidden", "false");
 
-    if (introTitle) {
-      introTitle.textContent = mergedContent.intro.title;
-    }
-    if (introMessage) {
-      introMessage.textContent = mergedContent.intro.message;
-    }
-    if (finalTitle) {
-      finalTitle.textContent = mergedContent.final.title;
-    }
-    if (finalMessage) {
-      finalMessage.textContent = mergedContent.final.message;
-    }
-    if (finalScreen) {
-      finalScreen.setAttribute("aria-hidden", "true");
-    }
-    if (introScreen) {
-      introScreen.setAttribute("aria-hidden", "false");
-    }
-
-    attachAudioFallbackUnlock();
-    introTimeout = setTimeout(() => {
-      hideIntroAndStartQuiz();
-    }, mergedTiming.introDelayMs);
-
-    if (introScreen) {
-      const onIntroClick = () => {
-        unlockAudio().then(() => {
-          hideIntroAndStartQuiz();
-        });
-      };
+    if (introScreen && !recordMode) {
+      const onIntroClick = () => unlockAudio().then(startQuiz);
       introScreen.addEventListener("click", onIntroClick, { once: true });
       disposers.push(() => introScreen.removeEventListener("click", onIntroClick));
     }
 
-    activeCleanup = destroy;
-    return {
-      ok: true,
-      destroy,
-      questionCount: questionBank.length,
-      timing: mergedTiming,
-      theme: mergedTheme.name
-    };
+    preloadAssets(questionBank).then(() => {
+      if (phase !== "intro") {
+        return;
+      }
+      emit("intro");
+      introTimeout = setTimeout(startQuiz, scaled(timing.introDelayMs));
+    });
+
+    return { ok: true, destroy, questionCount: questionBank.length, timing };
   };
 
   const bootstrapQuiz = async () => {
     try {
-      const config = await loadQuizConfigFromDataset();
-      window.initializeQuiz(config);
+      const datasetPath = await resolveDatasetPath();
+      window.activeQuizDatasetPath = datasetPath;
+      window.initializeQuiz(await fetchJson(datasetPath));
     } catch (error) {
       console.error("Failed to load quiz configuration.", error);
+      emit("error", { reason: String(error) });
       window.initializeQuiz({
-        content: {
-          intro: {
-            title: "Quiz setup error",
-            message: "Unable to load the selected quiz dataset JSON."
-          }
-        },
+        content: { intro: { title: "Quiz setup error", message: "Unable to load the selected quiz dataset JSON." } },
         questions: []
       });
     }

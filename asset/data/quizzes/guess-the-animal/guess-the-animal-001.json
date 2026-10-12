@@ -1,0 +1,172 @@
+{
+  "questions": [
+    {
+      "question": "I swim in the sea, click and whistle, and love to jump. Who am I?",
+      "answers": [
+        "Octopus",
+        "Crab",
+        "Shark",
+        "Dolphin"
+      ],
+      "correctIndex": 3,
+      "fact": "Dolphins sleep with one half of their brain at a time!",
+      "subject": "Common bottlenose dolphin",
+      "imageUrl": "asset/img/quiz/common-bottlenose-dolphin.jpg",
+      "imageCredit": {
+        "file": "Tursiops truncatus 01-cropped.jpg",
+        "author": "NASA",
+        "license": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Tursiops_truncatus_01-cropped.jpg"
+      }
+    },
+    {
+      "question": "I have thick white fur and live on the Arctic ice. Who am I?",
+      "answers": [
+        "Polar bear",
+        "Brown bear",
+        "Penguin",
+        "Seal"
+      ],
+      "correctIndex": 0,
+      "fact": "Under all that white fur, a polar bear's skin is black!",
+      "subject": "Polar bear",
+      "imageUrl": "asset/img/quiz/polar-bear.jpg",
+      "imageCredit": {
+        "file": "Polar Bear - Alaska (cropped).jpg",
+        "author": "Alan Wilson",
+        "license": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Polar_Bear_-_Alaska_(cropped).jpg"
+      }
+    },
+    {
+      "question": "I am the biggest animal that has ever lived. Who am I?",
+      "answers": [
+        "Dinosaur",
+        "Elephant",
+        "Blue whale",
+        "Shark"
+      ],
+      "correctIndex": 2,
+      "fact": "A blue whale's heart is as big as a bumper car!",
+      "subject": "Blue whale",
+      "imageUrl": "asset/img/quiz/blue-whale.jpg",
+      "imageCredit": {
+        "file": "Anim1754 - Flickr - NOAA Photo Library.jpg",
+        "author": "NOAA Photo Library",
+        "license": "Public domain",
+        "source": "https://commons.wikimedia.org/wiki/File:Anim1754_-_Flickr_-_NOAA_Photo_Library.jpg"
+      }
+    },
+    {
+      "question": "I open my tail like a giant colorful fan. Who am I?",
+      "answers": [
+        "Chicken",
+        "Peacock",
+        "Pigeon",
+        "Parrot"
+      ],
+      "correctIndex": 1,
+      "fact": "Only the boys, called peacocks, have the big fancy tail!",
+      "subject": "Indian peafowl",
+      "imageUrl": "asset/img/quiz/indian-peafowl.jpg",
+      "imageCredit": {
+        "file": "Peacock on tree (52077240794).jpg",
+        "author": "Kandukuru Nagarjun from Bangalore, India",
+        "license": "CC BY 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Peacock_on_tree_(52077240794).jpg"
+      }
+    },
+    {
+      "question": "I have orange fur with black stripes. Who am I?",
+      "answers": [
+        "Fox",
+        "Lion",
+        "Leopard",
+        "Tiger"
+      ],
+      "correctIndex": 3,
+      "fact": "No two tigers have the same stripes!",
+      "subject": "Tiger",
+      "imageUrl": "asset/img/quiz/tiger.jpg",
+      "imageCredit": {
+        "file": "Bengal tiger (Panthera tigris tigris) female 3 crop.jpg",
+        "author": "Charles J. Sharp",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Bengal_tiger_(Panthera_tigris_tigris)_female_3_crop.jpg"
+      }
+    },
+    {
+      "question": "I have a hard shell and lay my eggs on the beach. Who am I?",
+      "answers": [
+        "Frog",
+        "Seal",
+        "Sea turtle",
+        "Duck"
+      ],
+      "correctIndex": 2,
+      "fact": "Sea turtles can hold their breath for hours while they sleep!",
+      "subject": "Green sea turtle",
+      "imageUrl": "asset/img/quiz/green-sea-turtle.jpg",
+      "imageCredit": {
+        "file": "Green sea turtle (Chelonia mydas) Moorea.jpg",
+        "author": "Charles J. Sharp",
+        "license": "CC BY-SA 4.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Green_sea_turtle_(Chelonia_mydas)_Moorea.jpg"
+      }
+    },
+    {
+      "question": "I am small and spiky, and I curl up into a ball. Who am I?",
+      "answers": [
+        "Hedgehog",
+        "Mouse",
+        "Hamster",
+        "Squirrel"
+      ],
+      "correctIndex": 0,
+      "fact": "A hedgehog has about 5,000 spikes called quills!",
+      "subject": "Hedgehog",
+      "imageUrl": "asset/img/quiz/hedgehog.jpg",
+      "imageCredit": {
+        "file": "Igel.JPG",
+        "author": "Gibe",
+        "license": "CC BY-SA 3.0",
+        "source": "https://commons.wikimedia.org/wiki/File:Igel.JPG"
+      }
+    },
+    {
+      "question": "I have a long snout, lots of teeth, and bumpy skin. Who am I?",
+      "answers": [
+        "Lizard",
+        "Crocodile",
+        "Shark",
+        "Snake"
+      ],
+      "correctIndex": 1,
+      "fact": "Crocodiles can't stick out their tongues!",
+      "subject": "Nile crocodile",
+      "imageUrl": "asset/img/quiz/nile-crocodile.jpg",
+      "imageCredit": {
+        "file": "NileCrocodile.jpg",
+        "author": "Dewet",
+        "license": "CC BY-SA 2.0",
+        "source": "https://commons.wikimedia.org/wiki/File:NileCrocodile.jpg"
+      }
+    }
+  ],
+  "timing": {
+    "questionSeconds": 10,
+    "revealDurationMs": 3500,
+    "introDelayMs": 3000,
+    "urgentThresholdSeconds": 3
+  },
+  "content": {
+    "intro": {
+      "title": "Guess the Animal Quiz",
+      "message": "Can you guess them all?"
+    },
+    "final": {
+      "title": "Great guessing!",
+      "message": "How many did you get right?"
+    }
+  }
+}
