@@ -21,7 +21,7 @@ Requirements: Python 3.10+, Node.js 18+ and [uv](https://docs.astral.sh/uv/).
 npm install                                         # Playwright + a bundled ffmpeg
 npx playwright install chromium                     # headless browser (~120 MB, in ~/.cache/ms-playwright)
 sudo env "PATH=$PATH" npx playwright install-deps chromium   # one-time: Chromium's Linux libraries
-uv venv .venv && uv pip install --python .venv/bin/python piper-tts   # offline narrator voice
+uv venv .venv && uv pip install --python .venv/bin/python -r requirements.txt   # narrator voice + YouTube API
 ```
 
 Voices download on first use into `.cache/voices/` (60–115 MB each); narration clips are cached
@@ -170,7 +170,49 @@ The page picks a dataset from `?dataset=<path>`, else the manifest's `defaultDat
 
 ---
 
-## 6) Troubleshooting
+## 6) Publish to YouTube on a daily schedule
+
+`tools/youtube_publish.py` uploads rendered episodes as **private videos with a publish time**;
+YouTube makes each one public at that moment, so your PC does not need to be on at publish time.
+One episode per day (its 16:9 video and its Short together) at the time in `publish/config.json`
+(default 08:00 Europe/London). Every upload is recorded in `publish/schedule.json`, so re-running
+never uploads the same video twice.
+
+### One-time Google setup (about 10 minutes, in your browser)
+
+1. Open <https://console.cloud.google.com/>, create a project (e.g. "Kids Quiz Uploader").
+2. **APIs & Services → Library** → enable **YouTube Data API v3**.
+3. **Google Auth Platform → Branding / Audience**: user type **External**, fill in the app name and your
+   email, then under **Audience** click **Publish app** (status "In production").
+   While an app is in "Testing", Google expires its sign-in after 7 days and scheduling would stop.
+   Your app stays unverified; that is fine for your own channel — at sign-in choose *Advanced → Go to app*.
+4. **Clients → Create client → Desktop app** → download the JSON and save it as
+   `.secrets/client_secret.json` in this project (the folder is git-ignored; never commit it).
+5. Sign in once:
+
+   ```bash
+   .venv/bin/python tools/youtube_publish.py auth
+   ```
+
+   Open the printed URL in your Windows browser and pick the YouTube channel to upload to.
+
+### Every time you have new episodes
+
+```bash
+npm run record -- --dataset <dataset.json>                       # 16:9 video
+npm run record -- --dataset <dataset.json> --format portrait     # Short
+.venv/bin/python tools/youtube_publish.py plan       # preview dates and titles
+.venv/bin/python tools/youtube_publish.py schedule   # upload them with publish times
+.venv/bin/python tools/youtube_publish.py status     # check what is scheduled / live
+```
+
+New episodes are queued on the first free day after the last scheduled one (`--start YYYY-MM-DD`
+to choose the first day, `--limit N` to upload fewer). Uploads are marked **Made for kids**, category
+Education, with the description, chapters and photo credits from `description.txt`; edit tags, time,
+timezone and formats in `publish/config.json`. Custom thumbnails need a phone-verified channel
+(YouTube Studio → Settings → Channel → Feature eligibility); without it the upload still succeeds.
+
+## 7) Troubleshooting
 
 - **`libnspr4.so: cannot open shared object file`** — run the `install-deps` command from Setup.
 - **"Quiz setup error" on the page** — the dataset path is wrong or the JSON is invalid; run `validate`.

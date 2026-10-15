@@ -1,0 +1,4 @@
+# Python tools (install with: uv pip install --python .venv/bin/python -r requirements.txt)
+piper-tts                 # offline narrator voice (tools/narrate.py)
+google-api-python-client  # YouTube uploads (tools/youtube_publish.py)
+google-auth-oauthlib

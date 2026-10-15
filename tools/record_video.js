@@ -252,10 +252,12 @@ const buildAudioMix = (events, startMs, totalMs, clips) => {
   return { inputArgs, filter: filters.join(";") };
 };
 
-const buildDescription = (dataset, events, startMs) => {
+const buildDescription = (dataset, datasetPath, events, startMs) => {
   const lines = [];
   const title = dataset.content?.intro?.title || "Kids Quiz";
-  lines.push(`${title} | Fun Quiz for Kids with Pictures and Fun Facts`, "");
+  const episode = datasetPath.match(/-(\d+)\.json$/);
+  const numbered = episode ? `${title} #${Number(episode[1])}` : title;
+  lines.push(`${numbered} | Fun Quiz for Kids with Pictures and Fun Facts`, "");
   lines.push("Can you guess them all? Pause the video if you need more time!", "");
   lines.push("0:00 Intro");
   events
@@ -389,7 +391,7 @@ const recordDataset = async (browser, baseUrl, datasetPath) => {
   ]);
   await rm(silentVideo);
   await rm(renderDatasetPath);
-  await writeFile(path.join(outDir, "description.txt"), buildDescription(dataset, events, startMs));
+  await writeFile(path.join(outDir, "description.txt"), buildDescription(dataset, datasetPath, events, startMs));
   return { finalVideo, seconds: totalMs / 1000, captureFps: frameCount / (totalMs / 1000) };
 };
 
